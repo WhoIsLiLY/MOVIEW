@@ -1,0 +1,7 @@
+{
+  "name": "project_hmp_160422011_160422007",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

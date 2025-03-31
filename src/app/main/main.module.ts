@@ -7,14 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { MainPageRoutingModule } from './main-routing.module';
 
 import { MainPage } from './main.page';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    MainPageRoutingModule
+    MainPageRoutingModule,
   ],
-  declarations: [MainPage]
+  declarations: [MainPage],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class MainPageModule {}

@@ -10,4 +10,15 @@
       <ion-title size="large">MOVIEW</ion-title>
     </ion-toolbar>
   </ion-header>
+  <swiper-container [slidesPerView]="1.3" [spaceBetween]="20" [loop]="true" [autoplay]="{ delay: 4000 }"
+    [centeredSlides]="true" class="movie-carousel" >
+    <swiper-slide *ngFor="let movie of movies">
+      <div class="movie-card">
+        <img [src]="movie.poster" [alt]="movie.title">
+        <div class="movie-overlay">
+          <h3>{{ movie.title }}</h3>
+        </div>
+      </div>
+    </swiper-slide>
+  </swiper-container>
 </ion-content>

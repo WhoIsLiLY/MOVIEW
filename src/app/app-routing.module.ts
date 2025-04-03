@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { authLogin, authRole } from './auth.guard';
 
 const routes: Routes = [
   {
@@ -9,10 +10,6 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
-  },
-  {
-    path: 'registration',
-    loadChildren: () => import('./registration/registration.module').then( m => m.RegistrationPageModule)
   },
   {
     path: 'manage-movie',
@@ -29,6 +26,15 @@ const routes: Routes = [
   {
     path: 'search-movie',
     loadChildren: () => import('./search-movie/search-movie.module').then( m => m.SearchMoviePageModule)
+  },
+  {
+    path: 'detail-movie/:id',
+    loadChildren: () => import('./detail-movie/detail-movie.module').then( m => m.DetailMoviePageModule),
+    canActivate: [authLogin]
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
   }
 ];
 @NgModule({

@@ -1,33 +1,82 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>MOVIEW</ion-title>
+    <ion-title class="app-title">MOVIEW</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="isLoggedIn()" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+        Logout
+      </ion-button>
+
+      <ion-button *ngIf="!isLoggedIn()" routerLink="/login">
+        <ion-icon name="log-in-outline"></ion-icon>
+        Login
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <section id="movie-slider">
     <div class="container">
-      <swiper-container #swiper
-        effect="coverflow"
-        grab-cursor="true"
-        slides-per-view="auto"
-        loop="true"
-        centered-slides="true"
-        centered-slides-bounds="true"
-        coverflow-effect-rotate="0"
-        coverflow-effect-stretch="0"
-        coverflow-effect-depth="250"
-        coverflow-effect-modifier="1"
-        coverflow-effect-slide-shadows="true">
-        <swiper-slide *ngFor="let movie of movies; let i = index" (click)="slideToIndex(i)">
-          <img [src]="movie.poster" [alt]="movie.title" />
+      <h1 class="movie-title" style="padding-bottom: 10px;">
+        {{ isReleased(movies[currentIndex].releaseDate) ? 'NOW PLAYING' : 'UPCOMING' }}
+      </h1>
+      <swiper-container #swiper effect="coverflow" grab-cursor="true" slides-per-view="auto" loop="true"
+        centered-slides="true" centered-slides-bounds="true" coverflow-effect-rotate="0" coverflow-effect-stretch="0"
+        coverflow-effect-depth="250" coverflow-effect-modifier="1" coverflow-effect-slide-shadows="true">
+
+        <swiper-slide *ngFor="let movie of movies; let i = index" [attr.data-swiper-slide-index]="i">
+          <img [src]="movie.poster" [alt]="movie.title" routerLink="/detail-movie/{{ movie.id }}" />
         </swiper-slide>
       </swiper-container>
     </div>
-    <div class="text" style="display: flex; justify-content: center; align-items: center;">
-      <h1>Movie Title</h1>
+    <div class="movie-info">
+      <h1 class="movie-title">
+        {{ movies[currentIndex].title }}
+      </h1>
+      <div class="movie-detail">
+        <div class="detail-item">
+          <span class="value">{{ movies[currentIndex].genre }}</span>
+        </div>
+      </div>
+      <br>
+      <div class="detail-item">
+        <p class="sentence">
+          {{ getMovieMessage() }}
+        </p>
+      </div>
+      <div class="detail-item">
+        <p class="sentence">
+          Saksikan pada tanggal <span class="value">{{ movies[currentIndex].releaseDate }}</span>!
+        </p>
+      </div>
     </div>
-    
   </section>
-
+  <section class="movie-list">
+    <h2>Top Rated Movies</h2>
+    <div class="movie-grid">
+      <div class="movie-card" *ngFor="let movie of topRatedMovies; let i = index">
+        <img [src]="movie.poster" [alt]="movie.title" routerLink="/detail-movie/{{ movie.id }}"/>
+        <div class="movie-info">
+          <h3>{{ movie.title }}</h3>
+          <p>⭐ {{ movie.averageRating }}</p>
+          <button ion-button>Detail</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="movie-list">
+    <h2>Upcoming Movies</h2>
+    <div class="movie-grid">
+      <div class="movie-card" *ngFor="let movie of upcomingMovies; let i = index">
+        <img [src]="movie.poster" [alt]="movie.title" routerLink="/detail-movie/{{ movie.id }}" />
+        <div class="movie-info">
+          <h3>{{ movie.title }}</h3>
+          <p>📅 {{ movie.releaseDate }}</p>
+          <button ion-button>Detail</button>
+        </div>
+      </div>
+    </div>
+  </section>
 </ion-content>

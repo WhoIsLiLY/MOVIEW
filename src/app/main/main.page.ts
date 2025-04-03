@@ -1,13 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { register } from 'swiper/element/bundle';
 import { SwiperOptions } from 'swiper/types';
+import { Movie, movies } from './movies-data';
+import { ToastController } from '@ionic/angular';
 
 register();
-
-interface Movie {
-  title: string;
-  poster: string;
-}
 
 @Component({
   selector: 'app-main',
@@ -18,20 +15,12 @@ interface Movie {
 export class MainPage implements OnInit {
   @ViewChild('swiper') swiperRef: ElementRef | undefined;
   isDesktop: boolean = window.innerWidth > 768;
-  movies: Movie[] = [
-    { title: 'Aquaman and The Lost Kingdom', poster: 'assets/movies/mobile/p1.jpg' },
-    { title: 'Wonka', poster: 'assets/movies/mobile/p2.jpg' },
-    { title: 'The Beekeeper', poster: 'assets/movies/mobile/p3.jpg' },
-    { title: 'Spiderman: Across the Spider Verse', poster: 'assets/movies/mobile/p4.jpg' },
-    { title: 'Transformer: Rise of the Beast', poster: 'assets/movies/mobile/p5.jpg' },
-    { title: 'Night Swim', poster: 'assets/movies/mobile/p6.jpg' },
-    { title: 'The Book of Clarence', poster: 'assets/movies/mobile/p7.jpg' },
-    { title: 'Ne Zha 2', poster: 'assets/movies/mobile/p8.jpg' },
-    { title: 'Ed Westwick Darkgame', poster: 'assets/movies/mobile/p9.jpg' },
-    { title: 'Wanted Man', poster: 'assets/movies/mobile/p10.jpg' },
-  ];
+  currentIndex: number = 1;
+  movies: Movie[] = movies;
+  topRatedMovies: Movie[] = [];
+  upcomingMovies: Movie[] = [];
 
-  constructor() { }
+  constructor(private cdr: ChangeDetectorRef,  private toastController: ToastController) { }
 
   ngOnInit() {
     // Add index property to each movie for tracking
@@ -41,6 +30,73 @@ export class MainPage implements OnInit {
     }));
     this.updateDeviceType();
     window.addEventListener('resize', this.updateDeviceType);
+    this.loadMovies();
+    // console.log(this.topRatedMovies);
+    // console.log(this.upcomingMovies);
+  }
+
+  async showToast(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      color,
+    });
+    await toast.present();
+  }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  logout() {
+    // Menghapus token dari localStorage untuk logout
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+
+    this.showToast('Logout successful!', 'success');
+  }
+
+  loadMovies() {
+    this.topRatedMovies = this.movies
+      .filter(movie => (movie.averageRating || 0) >= 0)
+      .sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0))
+      .slice(0, 5)
+      .map(movie => ({
+        ...movie,
+        poster: movie.poster.replace(/assets\/movies\/.*/, 'assets/movies/mobile/' + movie.poster.split('/').pop())
+      }));
+
+    this.upcomingMovies = this.movies
+      .filter(movie => new Date(movie.releaseDate) > new Date())
+      .sort((a, b) => new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime())
+      .slice(0, 5)
+      .map(movie => ({
+        ...movie,
+        poster: movie.poster.replace(/assets\/movies\/.*/, 'assets/movies/mobile/' + movie.poster.split('/').pop())
+      }));
+}
+
+
+  isReleased(releaseDate: string): boolean {
+    return new Date(releaseDate) <= new Date();
+  }
+
+  getMovieMessage(): string {
+    const movie = this.movies?.[this.currentIndex]; // Cek apakah movies tersedia
+
+    if (!movie || movie.averageRating == null) { // Cek jika rating tidak ada
+      return 'Film ini bentar lagi tayang lho! Ayo pre-order sekarang!';
+    }
+
+    if (movie.averageRating >= 9) {
+      return `Film ini dapat rating ⭐ ${movie.averageRating} dari penonton lho! Wajib ditonton!`;
+    } else if (movie.averageRating >= 6) {
+      return `Film ini punya rating ⭐ ${movie.averageRating} nih. Masih seru buat ditonton!`;
+    } else if (movie.averageRating > 0) {
+      return `Ratingnya ⭐ ${movie.averageRating}. Tapi siapa tahu kamu tetap suka!`;
+    } else {
+      return 'Belum ada yang rate movie ini nih, yuk jadi yang pertama untuk rate!';
+    }
   }
 
   updateDeviceType = () => {
@@ -65,8 +121,9 @@ export class MainPage implements OnInit {
     setTimeout(() => {
       if (this.swiperRef?.nativeElement) {
         const swiperInstance = this.swiperRef.nativeElement.swiper;
-
-        // Handle issue with the last slide click
+        swiperInstance.on('slideChange', () => {
+          this.updateCurrentIndex();
+        });
         swiperInstance.on('slideChangeTransitionEnd', () => {
           if (swiperInstance.isEnd) {
             swiperInstance.loopFix();
@@ -75,5 +132,18 @@ export class MainPage implements OnInit {
         });
       }
     }, 2000);
+  }
+  updateCurrentIndex() {
+    if (this.swiperRef?.nativeElement) {
+      const activeSlide = this.swiperRef.nativeElement.querySelector('.swiper-slide-active');
+
+      if (activeSlide) {
+        const index = activeSlide.getAttribute('data-swiper-slide-index');
+        if (index !== null) {
+          this.currentIndex = parseInt(index, 10);
+          this.cdr.detectChanges(); // Paksa update UI agar movie-title berubah
+        }
+      }
+    }
   }
 }

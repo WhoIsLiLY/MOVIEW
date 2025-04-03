@@ -39,7 +39,14 @@
   }
   
   .reviews {
-    margin-top: 20px;
+    margin: 0 60px;
+  }
+
+  .reviews h2{
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 1.6rem;
+    font-weight: bold;
   }
   
   .review {
@@ -49,9 +56,16 @@
   }
   
   .review-form {
-    margin-top: 30px;
+    margin: 0 60px;
     padding: 10px;
     border-radius: 8px;
+  }
+
+  .review-form h2{
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 1.6rem;
+    font-weight: bold;
   }
   
   @media (max-width: 768px) {

@@ -1,0 +1,42 @@
+.movie-container {
+    padding: 20px;
+    color: #fff;
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  
+  .inner-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .movie-header {
+    flex: 1 1 300px;
+    text-align: center;
+  }
+  
+  .movie-poster {
+    width: 100%;
+    max-width: 250px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+  }
+  
+  input[type="file"] {
+    margin-top: 10px;
+  }
+  
+  .movie-info {
+    flex: 2 1 400px;
+  }
+  
+  .casting h3 {
+    margin-top: 20px;
+    font-size: 1.2rem;
+  }
+  

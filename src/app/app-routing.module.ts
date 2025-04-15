@@ -20,8 +20,8 @@ const routes: Routes = [
     loadChildren: () => import('./add-movie/add-movie.module').then( m => m.AddMoviePageModule)
   },
   {
-    path: 'edit-movie',
-    loadChildren: () => import('./edit-movie/edit-movie.module').then( m => m.EditMoviePageModule)
+    path: 'edit-movie/:id',
+    loadChildren: () => import('./edit-movie/edit-movie.module').then(m => m.EditMoviePageModule)
   },
   {
     path: 'search-movie',

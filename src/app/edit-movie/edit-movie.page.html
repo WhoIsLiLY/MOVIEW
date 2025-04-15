@@ -1,13 +1,70 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>edit-movie</ion-title>
+    <ion-title>Edit {{ movie?.title }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">edit-movie</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="movie-container" *ngIf="movie">
+
+    <h1>Edit Movie Details</h1>
+    <div class="inner-container">
+
+      <!-- Image Movie Upload -->
+      <div class="movie-header">
+        <img [src]="posterPreview || movie.poster" alt="Movie Poster" class="movie-poster" />
+        <input type="file" accept="image/*" (change)="onImageSelected($event)" />
+      </div>
+
+      <!-- Movie Information -->
+      <div class="movie-info">
+        <ion-item>
+          <ion-label position="floating">Title</ion-label>
+          <ion-input [(ngModel)]="movie.title"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Genre</ion-label>
+          <ion-input [(ngModel)]="movie.genre"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Release Date</ion-label>
+          <ion-datetime presentation="date" [(ngModel)]="movie.releaseDate"></ion-datetime>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Average Rating</ion-label>
+          <ion-input type="number" [(ngModel)]="movie.averageRating"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Director</ion-label>
+          <ion-input [(ngModel)]="movie.director"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Synopsis</ion-label>
+          <ion-textarea [(ngModel)]="movie.synopsis"></ion-textarea>
+        </ion-item>
+
+        <div class="casting">
+          <h3>Casting</h3>
+          <div *ngFor="let cast of movie.casting; let i = index">
+            <ion-item>
+              <ion-label position="floating">Actor</ion-label>
+              <ion-input [(ngModel)]="cast.actor"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Role</ion-label>
+              <ion-input [(ngModel)]="cast.role"></ion-input>
+            </ion-item>
+          </div>
+        </div>
+
+        <ion-button expand="block" color="success" (click)="saveMovie()">Save Changes</ion-button>
+      </div>
+
+    </div>
+  </div>
 </ion-content>

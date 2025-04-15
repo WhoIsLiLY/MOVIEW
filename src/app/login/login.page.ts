@@ -38,8 +38,15 @@ export class LoginPage {
       localStorage.setItem('token', 'your-jwt-token');
       localStorage.setItem('role', 'admin');
       this.showToast('Login successful!', 'success');
+      this.router.navigate(['/manage-movie']);
+    } 
+    else if(this.email === 'user@example.com' && this.password === 'user123'){
+      localStorage.setItem('token', 'your-jwt-token');
+      localStorage.setItem('role', 'user');
+      this.showToast('Login successful!', 'success');
       this.router.navigate(['/']);
-    } else {
+    }
+    else {
       this.showToast('Invalid email or password', 'danger');
     }
   }

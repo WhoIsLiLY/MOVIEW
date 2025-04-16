@@ -1,0 +1,236 @@
+  :host {
+    --primary: #6e4bec;
+    --border: #200b4c;
+  }
+
+  ion-content {
+    // overwrite inline styles
+    --offset-bottom: auto!important;
+    --overflow: hidden;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  ion-header {
+    --background: linear-gradient(45deg, #1c1c1c, #3a3a3a);
+    color: white;
+  }
+
+  .app-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  ion-button {
+    --background: #ff4757;
+    --color: white;
+    font-weight: bold;
+    border-radius: 8px;
+  }
+
+  #movie-slider {
+    text-align: center;
+    position: relative;
+    padding-bottom: 60px;
+  }
+
+  .movie-info {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .movie-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .movie-detail {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+  }
+  
+  .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px;
+    color: #555;
+  }
+
+  .sentence {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .label {
+    font-weight: 600;
+  }
+  
+  .icon {
+    font-size: 18px;
+  }
+
+  .movie-subtitle {
+    font-size: 1rem;
+    opacity: 0.8;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .container {
+    max-width: 1440px;
+    padding: 0 10px;
+    margin: 0 auto;
+    margin-top: 50px;
+  }
+
+  swiper-container {
+    width: 100%;
+    height: 430px;
+  }
+
+  swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 50%;
+    height: 95%;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      border: 2px solid transparent;
+      object-fit: cover;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+    }
+    
+    &.swiper-slide-active img {
+      border: 2px solid var(--border);
+    }
+  }
+
+  ::ng-deep .swiper-pagination {
+    position: absolute;
+    bottom: 10px;
+  }
+
+  ::ng-deep .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 50%;
+    background: #ccc;
+    opacity: 0.5;
+    margin: 0 5px;
+  }
+
+  ::ng-deep .swiper-pagination-bullet-active {
+    opacity: 1;
+    background: var(--primary);
+  }
+
+  @media (max-width: 500px) {
+    swiper-container {
+      height: 450px;
+    }
+    
+    swiper-slide {
+      width: 250px;
+      height: 380px;
+    }
+  }
+  .movie-list {
+    margin: 40px 0;
+    text-align: center;
+  }
+  
+  .movie-list h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .movie-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(200px, 1fr)); /* Maksimal 5 kolom */
+    gap: 20px;
+    padding: 0 20px;
+    justify-content: center;
+  }
+  
+  .movie-card {
+    background: #222;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+  
+  .movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+  }
+  
+  .movie-card img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-bottom: 3px solid #e50914;
+  }
+  
+  .movie-info {
+    width: 100%;
+    padding: 15px;
+    color: #fff;
+    text-align: center;
+  }
+  
+  .movie-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  
+  .movie-info p {
+    font-size: 1rem;
+    color: #ddd;
+  }
+  
+  .movie-info button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: #e50914;
+    color: white;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .movie-info button:hover {
+    background: #b20710;
+  }

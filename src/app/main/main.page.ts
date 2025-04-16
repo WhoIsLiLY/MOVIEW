@@ -16,15 +16,18 @@ register();
 })
 export class MainPage implements OnInit {
   @ViewChild('swiper') swiperRef: ElementRef | undefined;
+  @ViewChild('mainBackgroundDesktop', { static: false }) mainBackgroundDesktop!: ElementRef;
+  @ViewChild('mobile_layout', { static: false }) mobile_layout!: ElementRef;
+  @ViewChild('desktop_layout', { static: false }) desktop_layout!: ElementRef;
   isDesktop: boolean = window.innerWidth > 768;
-  currentIndex: number = 1;
+  currentIndex: number = 2;
   movies: Movie[] = movies;
   topRatedMovies: Movie[] = [];
   upcomingMovies: Movie[] = [];
-  filter : String = "title";
-  query : string ="";
+  filter: String = "title";
+  query: string = "";
 
-  constructor(private cdr: ChangeDetectorRef,  private toastController: ToastController, private router : Router) { }
+  constructor(private cdr: ChangeDetectorRef, private toastController: ToastController, private router: Router) { }
 
   ngOnInit() {
     // Add index property to each movie for tracking
@@ -78,7 +81,7 @@ export class MainPage implements OnInit {
         ...movie,
         poster: movie.poster.replace(/assets\/movies\/.*/, 'assets/movies/mobile/' + movie.poster.split('/').pop())
       }));
-}
+  }
 
 
   isReleased(releaseDate: string): boolean {
@@ -111,6 +114,22 @@ export class MainPage implements OnInit {
         ? movie.poster.replace('/mobile/', '/desktop/')
         : movie.poster.replace('/desktop/', '/mobile/')
     }));
+    if (this.isDesktop) {
+      const dkEl = this.desktop_layout?.nativeElement;
+      const mbEl = this.mobile_layout?.nativeElement;
+      if (dkEl && mbEl) {
+        dkEl.style.display = `block`;
+        mbEl.style.display = 'none';
+      }
+    }else{
+      const dkEl = this.desktop_layout?.nativeElement;
+      const mbEl = this.mobile_layout?.nativeElement;
+      if (dkEl && mbEl) {
+        dkEl.style.display = 'none';
+        mbEl.style.display = 'block';
+      }
+    }
+    this.cdr.detectChanges();
   }
 
   slideToIndex(index: number) {
@@ -127,6 +146,7 @@ export class MainPage implements OnInit {
         const swiperInstance = this.swiperRef.nativeElement.swiper;
         swiperInstance.on('slideChange', () => {
           this.updateCurrentIndex();
+          this.updateBackgroundImage();
         });
         swiperInstance.on('slideChangeTransitionEnd', () => {
           if (swiperInstance.isEnd) {
@@ -150,8 +170,19 @@ export class MainPage implements OnInit {
       }
     }
   }
+  updateBackgroundImage() {
+    const bgEl = this.mainBackgroundDesktop?.nativeElement;
+    if (bgEl) {
+      const newUrl = this.movies[this.currentIndex].poster;
+      bgEl.style.backgroundImage = `
+        linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.9) 100%),
+        url("${newUrl}")
+      `;
+    }
+    this.cdr.detectChanges();
+  }
 
-  search(event : Event){
+  search(event: Event) {
     this.router.navigate(['/search-movie/', this.query, this.filter]);
   }
 }

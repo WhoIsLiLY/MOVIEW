@@ -13,24 +13,32 @@ const routes: Routes = [
   },
   {
     path: 'manage-movie',
-    loadChildren: () => import('./manage-movie/manage-movie.module').then( m => m.ManageMoviePageModule)
+    loadChildren: () => import('./manage-movie/manage-movie.module').then( m => m.ManageMoviePageModule),
+    canActivate: [authLogin]
   },
   {
     path: 'add-movie',
-    loadChildren: () => import('./add-movie/add-movie.module').then( m => m.AddMoviePageModule)
+    loadChildren: () => import('./add-movie/add-movie.module').then( m => m.AddMoviePageModule),
+    canActivate: [authLogin]
   },
   {
     path: 'edit-movie/:id',
-    loadChildren: () => import('./edit-movie/edit-movie.module').then(m => m.EditMoviePageModule)
+    loadChildren: () => import('./edit-movie/edit-movie.module').then(m => m.EditMoviePageModule),
+    canActivate: [authLogin]
+  },
+  {
+    path: 'search-movie',
+    loadChildren: () => import('./search-movie/search-movie.module').then( m => m.SearchMoviePageModule),
+    canActivate: [authLogin]
   },
   {
     path: 'search-movie/:query/:filter',
-    loadChildren: () => import('./search-movie/search-movie.module').then( m => m.SearchMoviePageModule)
+    loadChildren: () => import('./search-movie/search-movie.module').then( m => m.SearchMoviePageModule),
+    canActivate: [authLogin]
   },
   {
     path: 'detail-movie/:id',
-    loadChildren: () => import('./detail-movie/detail-movie.module').then( m => m.DetailMoviePageModule),
-    canActivate: [authLogin]
+    loadChildren: () => import('./detail-movie/detail-movie.module').then( m => m.DetailMoviePageModule)
   },
   {
     path: 'register',

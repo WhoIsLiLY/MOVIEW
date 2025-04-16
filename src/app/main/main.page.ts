@@ -3,6 +3,8 @@ import { register } from 'swiper/element/bundle';
 import { SwiperOptions } from 'swiper/types';
 import { Movie, movies } from './movies-data';
 import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { query } from '@angular/animations';
 
 register();
 
@@ -19,8 +21,10 @@ export class MainPage implements OnInit {
   movies: Movie[] = movies;
   topRatedMovies: Movie[] = [];
   upcomingMovies: Movie[] = [];
+  filter : String = "title";
+  query : string ="";
 
-  constructor(private cdr: ChangeDetectorRef,  private toastController: ToastController) { }
+  constructor(private cdr: ChangeDetectorRef,  private toastController: ToastController, private router : Router) { }
 
   ngOnInit() {
     // Add index property to each movie for tracking
@@ -145,5 +149,9 @@ export class MainPage implements OnInit {
         }
       }
     }
+  }
+
+  search(event : Event){
+    this.router.navigate(['/search-movie/', this.query, this.filter]);
   }
 }

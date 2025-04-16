@@ -24,7 +24,7 @@ const routes: Routes = [
     loadChildren: () => import('./edit-movie/edit-movie.module').then(m => m.EditMoviePageModule)
   },
   {
-    path: 'search-movie',
+    path: 'search-movie/:query/:filter',
     loadChildren: () => import('./search-movie/search-movie.module').then( m => m.SearchMoviePageModule)
   },
   {
@@ -35,7 +35,8 @@ const routes: Routes = [
   {
     path: 'register',
     loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
-  }
+  },
+
 ];
 @NgModule({
   imports: [

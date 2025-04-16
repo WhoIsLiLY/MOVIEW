@@ -57,4 +57,7 @@ export class RegisterPage {
     });
     await toast.present();
   }
+  goToLogin() {
+    this.router.navigate(['/login'], {replaceUrl: true});
+  }
 }

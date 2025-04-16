@@ -15,7 +15,8 @@ register();
   standalone: false
 })
 export class MainPage implements OnInit {
-  @ViewChild('swiper') swiperRef: ElementRef | undefined;
+  @ViewChild('swiper_desktop') swiperRefDesktop: ElementRef | undefined;
+  @ViewChild('swiper_mobile') swiperRefMobile: ElementRef | undefined;
   @ViewChild('mainBackgroundDesktop', { static: false }) mainBackgroundDesktop!: ElementRef;
   @ViewChild('mobile_layout', { static: false }) mobile_layout!: ElementRef;
   @ViewChild('desktop_layout', { static: false }) desktop_layout!: ElementRef;
@@ -26,6 +27,8 @@ export class MainPage implements OnInit {
   upcomingMovies: Movie[] = [];
   filter: String = "title";
   query: string = "";
+  desktopSwiperInstance: any = null;
+  mobileSwiperInstance: any = null;
 
   constructor(private cdr: ChangeDetectorRef, private toastController: ToastController, private router: Router) { }
 
@@ -121,7 +124,8 @@ export class MainPage implements OnInit {
         dkEl.style.display = `block`;
         mbEl.style.display = 'none';
       }
-    }else{
+
+    } else {
       const dkEl = this.desktop_layout?.nativeElement;
       const mbEl = this.mobile_layout?.nativeElement;
       if (dkEl && mbEl) {
@@ -129,25 +133,44 @@ export class MainPage implements OnInit {
         mbEl.style.display = 'block';
       }
     }
+    console.log(this.isDesktop);
     this.cdr.detectChanges();
+    this.slideOnChange();
   }
 
   slideToIndex(index: number) {
-    if (this.swiperRef?.nativeElement) {
-      const swiperInstance = this.swiperRef.nativeElement.swiper;
-      swiperInstance.slideToLoop(index);
-      swiperInstance.update();
+    if (this.isDesktop) {
+      const swiperInstanceDesktop = this.swiperRefDesktop?.nativeElement.swiper;
+      swiperInstanceDesktop.slideToLoop(index);
+      swiperInstanceDesktop.update();
+    }
+    if (!this.isDesktop) {
+      const swiperInstanceMobile = this.swiperRefMobile?.nativeElement.swiper;
+      swiperInstanceMobile.slideToLoop(index);
+      swiperInstanceMobile.update();
     }
   }
 
   ngAfterViewInit() {
+    this.updateDeviceType();
+    this.loadMovies(); // Panggil load dulu
+    this.slideOnChange();
+  }
+
+  slideOnChange() {
     setTimeout(() => {
-      if (this.swiperRef?.nativeElement) {
-        const swiperInstance = this.swiperRef.nativeElement.swiper;
+      
+      console.log(this.isDesktop);
+      const swiperInstance = this.isDesktop
+        ? this.swiperRefDesktop?.nativeElement?.swiper
+        : this.swiperRefMobile?.nativeElement?.swiper;
+
+      if (swiperInstance) {
         swiperInstance.on('slideChange', () => {
           this.updateCurrentIndex();
           this.updateBackgroundImage();
         });
+
         swiperInstance.on('slideChangeTransitionEnd', () => {
           if (swiperInstance.isEnd) {
             swiperInstance.loopFix();
@@ -155,20 +178,26 @@ export class MainPage implements OnInit {
           }
         });
       }
-    }, 2000);
+    }, 1000);
   }
-  updateCurrentIndex() {
-    if (this.swiperRef?.nativeElement) {
-      const activeSlide = this.swiperRef.nativeElement.querySelector('.swiper-slide-active');
 
-      if (activeSlide) {
-        const index = activeSlide.getAttribute('data-swiper-slide-index');
-        if (index !== null) {
-          this.currentIndex = parseInt(index, 10);
-          this.cdr.detectChanges(); // Paksa update UI agar movie-title berubah
-        }
+  updateCurrentIndex() {
+    let activeSlide: HTMLElement | null = null;
+
+    if (this.isDesktop) {
+      activeSlide = this.swiperRefDesktop?.nativeElement.querySelector('.swiper-slide-active');
+    } else {
+      activeSlide = this.swiperRefMobile?.nativeElement.querySelector('.swiper-slide-active');
+    }
+
+    if (activeSlide) {
+      const index = activeSlide.getAttribute('data-swiper-slide-index');
+      if (index !== null) {
+        this.currentIndex = parseInt(index, 10);
+        this.cdr.detectChanges();
       }
     }
+    // console.log(activeSlide);
   }
   updateBackgroundImage() {
     const bgEl = this.mainBackgroundDesktop?.nativeElement;

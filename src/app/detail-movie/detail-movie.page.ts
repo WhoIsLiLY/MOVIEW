@@ -20,7 +20,8 @@ export class DetailMoviePage implements OnInit {
     averageRating: null,
     director: '',
     casting: [],
-    synopsis: ''
+    synopsis: '',
+    trailer_url: ''
   };
   id: number = 0;
   reviews: any[] = [];

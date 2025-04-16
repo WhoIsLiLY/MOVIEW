@@ -66,7 +66,7 @@
             <span class="see-more">See more</span>
           </p>
           <div class="button-group-desktop">
-            <button class="btn outline">Watch trailer</button>
+            <a href="{{ movies[currentIndex].trailer_url }}"><button class="btn outline">Watch trailer</button></a>
             <button class="btn primary" routerLink="/detail-movie/{{ movies[currentIndex].id }}">See detail</button>
           </div>
         </div>
@@ -82,7 +82,7 @@
           </button>
         </div>
         <div class="container">
-          <swiper-container #swiper effect="coverflow" grab-cursor="true" slides-per-view="auto" loop="true"
+          <swiper-container #swiper_desktop effect="coverflow" grab-cursor="true" slides-per-view="auto" loop="true"
             centered-slides="true" centered-slides-bounds="true" coverflow-effect-rotate="0" coverflow-effect-stretch="0"
             coverflow-effect-depth="250" coverflow-effect-modifier="1" coverflow-effect-slide-shadows="true">
   
@@ -101,7 +101,7 @@
         <h1 class="movie-title" style="padding-bottom: 10px;">
           {{ isReleased(movies[currentIndex].releaseDate) ? 'NOW PLAYING' : 'UPCOMING' }}
         </h1>
-        <swiper-container #swiper effect="coverflow" grab-cursor="true" slides-per-view="auto" loop="true"
+        <swiper-container #swiper_mobile effect="coverflow" grab-cursor="true" slides-per-view="auto" loop="true"
           centered-slides="true" centered-slides-bounds="true" coverflow-effect-rotate="0" coverflow-effect-stretch="0"
           coverflow-effect-depth="250" coverflow-effect-modifier="1" coverflow-effect-slide-shadows="true">
 

@@ -61,6 +61,6 @@ export class LoginPage {
   }
 
   goToRegister() {
-    this.router.navigate(['/register']);
+    this.router.navigate(['/register'], {replaceUrl: true});
   }
 }

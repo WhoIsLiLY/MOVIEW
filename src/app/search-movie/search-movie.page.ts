@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { movies,Movie } from '../main/movies-data';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -14,7 +14,7 @@ export class SearchMoviePage implements OnInit {
   query : string = "";
   movies: Movie[] = [];
   queriedMovie : Movie[] = [];
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private router : Router) { }
 
   ngOnInit() {
     this.movies = movies;
@@ -26,6 +26,8 @@ export class SearchMoviePage implements OnInit {
   }
 
   search(){
+    this.router.navigate(['/search-movie', this.query, this.filter]);
+
     if(this.filter === "title"){
       this.queriedMovie = this.movies.filter(movie => movie.title.toLowerCase().includes(this.query.toLowerCase())
     );
@@ -39,5 +41,9 @@ export class SearchMoviePage implements OnInit {
     else{
       this.queriedMovie = this.movies
     }
+  }
+
+  detailMovie(id: number) {
+    this.router.navigate(['/detail-movie', id]);
   }
 }

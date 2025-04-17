@@ -4,11 +4,82 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" *ngIf="isDesktop">
+  <!-- Desktop -->
+  <div class="movie-container-desktop">
+    <div class="movie-poster-desktop">
+      <img [src]="movie.poster" [alt]="movie.title">
+    </div>
+
+    <div class="movie-content-desktop">
+      <div class="movie-info">
+        <ion-label><h1>{{ isReleased(movie.releaseDate) ? 'Now Playing' : 'Up Coming' }}</h1></ion-label>
+        <h1>{{ movie.title }}</h1>
+        <p><strong>Genre:</strong> {{ movie.genre }}</p>
+        <p><strong>Release Date:</strong> {{ movie.releaseDate | date }}</p>
+        <p><strong>Average Rating:</strong> {{ movie.averageRating }}</p>
+        <p><strong>Director:</strong> {{ movie.director }}</p>
+        <div class="casting">
+          <strong>Casting</strong>
+          <div style="display: flex;">
+          <ion-card *ngFor="let cast of movie.casting" style="width: 200px; height: 300px;" >
+            <ion-card-header>
+              <img [src]="cast.image" [alt]="cast.actor" style=" height: 200px;">
+              <ion-card-title style="font-size: medium;">{{cast.actor}}</ion-card-title>
+              <ion-card-subtitle>{{cast.role}}</ion-card-subtitle>
+            </ion-card-header>          
+          </ion-card>
+        </div>
+        </div>
+        <p><strong>Synopsis:</strong> {{ movie.synopsis }}</p>
+      </div>
+
+      <div *ngIf="reviews.length > 0" class="reviews">
+        <h2>User Reviews</h2>
+        <div *ngFor="let review of reviews">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title><strong>{{ review.username }}</strong> ({{ review.date | date }})</ion-card-title>
+              <div style="display: flex; gap: 4px; margin-top: 4px; align-items: center;">
+                <ion-card-subtitle>Rating: {{ review.rating }}/5 </ion-card-subtitle>
+                <ion-icon name="star" size="small" color="danger"></ion-icon>
+              </div>
+            </ion-card-header>
+            <ion-card-content>
+              {{ review.text }}
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </div>
+    
+      <div *ngIf="isLoggedIn()" class="review-form">
+        <h2>Leave a Review</h2>
+        <ion-item>
+          <ion-label position="floating">Rating (1-5)</ion-label>
+          <ion-input type="number" [(ngModel)]="newReview.rating" min="1" max="5"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Review</ion-label>
+          <ion-textarea [(ngModel)]="newReview.text"></ion-textarea>
+        </ion-item>
+        <ion-button expand="block" (click)="submitReview()">Submit Review</ion-button>
+      </div>
+
+      <div *ngIf="!isLoggedIn()" style="margin-top: 24px; text-align: center;">
+        <ion-label><h1>Login to leave a review</h1></ion-label>
+        <ion-label><p>Don't have an account? <a (click)="goToLogin()">Login</a></p></ion-label>
+      </div>
+
+    </div>
+
+    
+  </div> 
+</ion-content>
+  <!-- Mobile -->
+<ion-content [fullscreen]="true" *ngIf="!isDesktop">
   <div class="movie-container">
     <h1>{{ isReleased(movie.releaseDate) ? 'Now Playing' : 'Up Coming' }}</h1>
     <div class="inner-container">
-
       <div class="movie-header">
         <img [src]="movie.poster" alt="Movie Poster" class="movie-poster" />
       </div>
@@ -24,6 +95,12 @@
           <ul>
             <li *ngFor="let cast of movie.casting">{{ cast.actor }} as {{ cast.role }}</li>
           </ul>
+          <ion-card *ngFor="let cast of movie.casting">
+            <ion-card-header>
+              <ion-card-title>{{cast.actor}}</ion-card-title>
+              <ion-card-subtitle>{{cast.role}}</ion-card-subtitle>
+            </ion-card-header>          
+          </ion-card>
         </div>
         <p><strong>Synopsis:</strong> {{ movie.synopsis }}</p>
       </div>
@@ -54,4 +131,10 @@
     </ion-item>
     <ion-button expand="block" (click)="submitReview()">Submit Review</ion-button>
   </div>
+
+  <div *ngIf="!isLoggedIn()" style="margin-top: 24px; text-align: center;">
+    <ion-label><h1>Login to leave a review</h1></ion-label>
+    <ion-label><p>Don't have an account? <a (click)="goToLogin()">Login</a></p></ion-label>
+  </div>
+
 </ion-content>

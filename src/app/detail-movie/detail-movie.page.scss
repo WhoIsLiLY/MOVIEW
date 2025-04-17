@@ -1,3 +1,25 @@
+.movie-container-desktop{
+  display: flex;
+}
+.movie-poster-desktop{
+  width: 40%;
+  height: 100vh;
+  position: sticky;
+  z-index: 10;
+  top: 5px;
+}
+.movie-poster-desktop img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain ; 
+}
+.movie-content-desktop{
+  width: 60%;
+  padding: 24px;
+  padding-top: 0px;
+  display: flex;
+  flex-direction: column; 
+}
 
 .movie-container {
     display: flex;
@@ -39,7 +61,7 @@
   }
   
   .reviews {
-    margin: 0 60px;
+    margin: 0 24px;
   }
 
   .reviews h2{

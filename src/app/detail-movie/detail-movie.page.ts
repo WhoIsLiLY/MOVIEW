@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Movie, movies } from '../main/movies-data';
 import { ToastController } from '@ionic/angular';
@@ -27,6 +27,8 @@ export class DetailMoviePage implements OnInit {
   reviews: any[] = [];
   newReview = { rating: null, text: '' };
   currentUser = { username: 'John Doe', isLoggedIn: true };
+  isDesktop : boolean = true;
+  
 
   constructor(
     private route: ActivatedRoute,
@@ -44,6 +46,8 @@ export class DetailMoviePage implements OnInit {
       this.fetchMovieDetails(movieId);
       this.fetchReviews(movieId);
     });
+
+    this.checkScreen();
   }
   isReleased(releaseDate: string): boolean {
     return new Date(releaseDate) <= new Date();
@@ -87,7 +91,7 @@ export class DetailMoviePage implements OnInit {
   }
 
   isLoggedIn() {
-    return this.currentUser.isLoggedIn; // Return true if user is logged in
+    return !!localStorage.getItem('token'); // Return true if user is logged in
   }
   async showToast(message: string, color: string) {
     const toast = await this.toastController.create({
@@ -96,5 +100,18 @@ export class DetailMoviePage implements OnInit {
       color,
     });
     await toast.present();
+  }
+
+  @HostListener('window:resize', [])
+  onResize() {
+    this.checkScreen();
+  }
+
+  checkScreen() {
+    this.isDesktop = window.innerWidth >= 900;
+  }
+
+  goToLogin(){
+    this.router.navigate(['/login']);
   }
 }

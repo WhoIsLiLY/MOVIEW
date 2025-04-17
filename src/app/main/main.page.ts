@@ -32,6 +32,30 @@ export class MainPage implements OnInit {
 
   constructor(private cdr: ChangeDetectorRef, private toastController: ToastController, private router: Router) { }
 
+  nextSlide() {
+    const swiperInstance = this.isDesktop
+      ? this.swiperRefDesktop?.nativeElement?.swiper
+      : this.swiperRefMobile?.nativeElement?.swiper;
+  
+    if (swiperInstance) {
+      swiperInstance.slideNext();
+    }
+    this.updateDeviceType();
+    console.log(this.currentIndex);
+  }
+  
+  prevSlide() {
+    const swiperInstance = this.isDesktop
+      ? this.swiperRefDesktop?.nativeElement?.swiper
+      : this.swiperRefMobile?.nativeElement?.swiper;
+  
+    if (swiperInstance) {
+      swiperInstance.slidePrev();
+    }
+    this.updateDeviceType();
+    console.log(this.currentIndex);
+  }
+
   ngOnInit() {
     // Add index property to each movie for tracking
     this.movies = this.movies.map((movie, index) => ({
@@ -133,7 +157,8 @@ export class MainPage implements OnInit {
         mbEl.style.display = 'block';
       }
     }
-    console.log(this.isDesktop);
+    // console.log(this.isDesktop);
+    // console.log(this.currentIndex);
     this.cdr.detectChanges();
     this.slideOnChange();
   }
@@ -160,7 +185,7 @@ export class MainPage implements OnInit {
   slideOnChange() {
     setTimeout(() => {
       
-      console.log(this.isDesktop);
+      // console.log(this.isDesktop);
       const swiperInstance = this.isDesktop
         ? this.swiperRefDesktop?.nativeElement?.swiper
         : this.swiperRefMobile?.nativeElement?.swiper;

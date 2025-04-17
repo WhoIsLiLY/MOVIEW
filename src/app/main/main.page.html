@@ -62,7 +62,7 @@
             {{ movies[currentIndex].title }}
           </h1>
           <div class="movie-meta-desktop">
-            <span class="imdb-badge">IMDb</span>
+            <span class="imdb-badge">‎ ★ ‎ </span>
             <span class="rating">{{ movies[currentIndex].averageRating }} (12.827) </span>
             <span>• {{ isReleased(movies[currentIndex].releaseDate) ? 'Now Playing' : 'Upcoming' }} </span>
             <span>• {{ movies[currentIndex].releaseDate }} </span>
@@ -81,10 +81,10 @@
       
       <section id="movie-slider">
         <div class="arrow-buttons">
-          <button class="arrow-btn">
+          <button class="arrow-btn" (click)="prevSlide()">
             <span>&lt;</span>
           </button>
-          <button class="arrow-btn">
+          <button class="arrow-btn" id="prevBtn" (click)="nextSlide()">
             <span>&gt;</span>
           </button>
         </div>

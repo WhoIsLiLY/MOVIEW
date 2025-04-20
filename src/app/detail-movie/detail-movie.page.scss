@@ -3,10 +3,10 @@
 }
 .movie-poster-desktop{
   width: 40%;
-  height: 100vh;
+  height: 100%;
   position: sticky;
   z-index: 10;
-  top: 5px;
+  top: 0;
 }
 .movie-poster-desktop img{
   width: 100%;

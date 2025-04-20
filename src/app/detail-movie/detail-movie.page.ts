@@ -108,7 +108,7 @@ export class DetailMoviePage implements OnInit {
   }
 
   checkScreen() {
-    this.isDesktop = window.innerWidth >= 900;
+    this.isDesktop = window.innerWidth >= 854;
   }
 
   goToLogin(){

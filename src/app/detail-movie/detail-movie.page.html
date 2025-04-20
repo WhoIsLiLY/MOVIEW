@@ -1,5 +1,8 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
     <ion-title>{{ movie.title }}</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -14,21 +17,21 @@
     <div class="movie-content-desktop">
       <div class="movie-info">
         <ion-label><h1>{{ isReleased(movie.releaseDate) ? 'Now Playing' : 'Up Coming' }}</h1></ion-label>
-        <h1>{{ movie.title }}</h1>
+        <h1 style="font-weight: bold; color: #ffcb05; font-size: 36px;">{{ movie.title }}</h1>
         <p><strong>Genre:</strong> {{ movie.genre }}</p>
         <p><strong>Release Date:</strong> {{ movie.releaseDate | date }}</p>
         <p><strong>Average Rating:</strong> {{ movie.averageRating }}</p>
         <p><strong>Director:</strong> {{ movie.director }}</p>
         <div class="casting">
           <strong>Casting</strong>
-          <div style="display: flex;">
-          <ion-card *ngFor="let cast of movie.casting" style="width: 200px; height: 300px;" >
-            <ion-card-header>
-              <img [src]="cast.image" [alt]="cast.actor" style=" height: 200px;">
-              <ion-card-title style="font-size: medium;">{{cast.actor}}</ion-card-title>
-              <ion-card-subtitle>{{cast.role}}</ion-card-subtitle>
-            </ion-card-header>          
-          </ion-card>
+        <div style="display: flex;">
+            <ion-card *ngFor="let cast of movie.casting" style="width: 200px; height: 300px;" >
+              <ion-card-header>
+                <img [src]="cast.image" [alt]="cast.actor" style=" height: 200px; object-fit: cover;">
+                <ion-card-title style="font-size: medium;">{{cast.actor}}</ion-card-title>
+                <ion-card-subtitle>{{cast.role}}</ion-card-subtitle>
+              </ion-card-header>          
+            </ion-card>
         </div>
         </div>
         <p><strong>Synopsis:</strong> {{ movie.synopsis }}</p>
@@ -95,12 +98,15 @@
           <ul>
             <li *ngFor="let cast of movie.casting">{{ cast.actor }} as {{ cast.role }}</li>
           </ul>
-          <ion-card *ngFor="let cast of movie.casting">
-            <ion-card-header>
-              <ion-card-title>{{cast.actor}}</ion-card-title>
-              <ion-card-subtitle>{{cast.role}}</ion-card-subtitle>
-            </ion-card-header>          
-          </ion-card>
+          <div style="display: flex;">
+            <ion-card *ngFor="let cast of movie.casting" style="width: 200px; height: 300px;" >
+              <ion-card-header>
+                <img [src]="cast.image" [alt]="cast.actor" style=" height: 200px; object-fit: cover;">
+                <ion-card-title style="font-size: medium;">{{cast.actor}}</ion-card-title>
+                <ion-card-subtitle>{{cast.role}}</ion-card-subtitle>
+              </ion-card-header>          
+            </ion-card>
+        </div>
         </div>
         <p><strong>Synopsis:</strong> {{ movie.synopsis }}</p>
       </div>
@@ -132,7 +138,7 @@
     <ion-button expand="block" (click)="submitReview()">Submit Review</ion-button>
   </div>
 
-  <div *ngIf="!isLoggedIn()" style="margin-top: 24px; text-align: center;">
+  <div *ngIf="!isLoggedIn()" style=" margin-bottom: 24px; text-align: center;">
     <ion-label><h1>Login to leave a review</h1></ion-label>
     <ion-label><p>Don't have an account? <a (click)="goToLogin()">Login</a></p></ion-label>
   </div>

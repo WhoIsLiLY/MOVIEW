@@ -15,7 +15,7 @@ export class ManageMoviePage implements OnInit {
   constructor(private router: Router, private toastController: ToastController) {}
 
   ngOnInit() {
-    this.movies = movies; // Gantilah jika kamu pakai API/backend
+    this.movies = movies; 
   }
 
   editMovie(id: number) {

@@ -9,14 +9,35 @@
 
 <ion-content [fullscreen]="true">
   <div class="movie-container">
-    <h1>Add New Movie</h1>
 
     <form [formGroup]="movieForm" (ngSubmit)="addMovie()" class="inner-container">
 
       <!-- Poster Preview & Upload -->
-      <div class="movie-header">
-        <img [src]="posterPreview || 'assets/placeholder.jpg'" alt="Movie Poster" class="movie-poster" />
-        <input type="file" accept="image/*" (change)="onImageSelected($event)" />
+      <div class="left-column">
+        <!-- DESKTOP Upload -->
+        <h3>Poster Desktop</h3>
+        <div class="poster-upload" (click)="triggerFileInput('desktop')" [class.has-image]="posterPreviewDesktop">
+          <ng-container *ngIf="!posterPreviewDesktop">
+            <span>Upload Poster Desktop</span>
+          </ng-container>
+          <img *ngIf="posterPreviewDesktop" [src]="posterPreviewDesktop" class="upload-img" />
+          <div class="overlay" *ngIf="posterPreviewDesktop"></div>
+          <input id="desktopInput" type="file" accept="image/*" hidden (change)="onDesktopImageSelected($event)" />
+        </div>
+
+        <br>
+
+        <!-- MOBILE Upload -->
+        <h3>Poster Mobile</h3>
+        <div class="poster-upload" (click)="triggerFileInput('mobile')" [class.has-image]="posterPreviewMobile">
+          <ng-container *ngIf="!posterPreviewMobile">
+            <span>Upload Poster Mobile</span>
+          </ng-container>
+          <img *ngIf="posterPreviewMobile" [src]="posterPreviewMobile" class="upload-img" />
+          <div class="overlay" *ngIf="posterPreviewMobile"></div>
+          <input id="mobileInput" type="file" accept="image/*" hidden (change)="onMobileImageSelected($event)" />
+        </div>
+
       </div>
 
       <!-- Movie Information Form -->
@@ -34,7 +55,6 @@
 
         <ion-item>
           <ion-label position="floating">Tanggal Rilis</ion-label>
-          <h1></h1>
           <ion-datetime formControlName="releaseDate" presentation="date"></ion-datetime>
         </ion-item>
 

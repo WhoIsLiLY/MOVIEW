@@ -1,51 +1,64 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Edit {{ movie?.title }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/manage-movie"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="movie-container" *ngIf="movie">
 
-    <h1>Edit Movie Details</h1>
-    <div class="inner-container">
+    <form class="inner-container">
 
-      <!-- Image Movie Upload -->
-      <div class="movie-header">
-        <img [src]="posterPreview || movie.poster" alt="Movie Poster" class="movie-poster" />
-        <input type="file" accept="image/*" (change)="onImageSelected($event)" />
+      <!-- Kolom Kiri: Upload Poster -->
+      <div class="left-column">
+        <!-- Poster Desktop -->
+        <div class="img-upload-wrapper">
+          <h3>Poster Desktop</h3>
+          <img [src]="posterPreviewDesktop || getPosterPath(movie?.poster)"  alt="Poster Desktop" class="upload-img" (click)="desktopInput.click()" />
+          <input type="file" accept="image/*" hidden #desktopInput (change)="onDesktopImageSelected($event)" />
+        </div>
+
+        <!-- Poster Mobile -->
+        <div class="img-upload-wrapper">
+          <h3>Poster Mobile</h3>
+          <img [src]="posterPreviewMobile || movie?.poster" alt="Poster Mobile" class="upload-img" (click)="mobileInput.click()" />
+          <input type="file" accept="image/*" hidden #mobileInput (change)="onMobileImageSelected($event)" />
+        </div>
       </div>
 
-      <!-- Movie Information -->
+      <!-- Kolom Kanan: Movie Information -->
       <div class="movie-info">
         <ion-item>
           <ion-label position="floating">Title</ion-label>
-          <ion-input [(ngModel)]="movie.title"></ion-input>
+          <ion-input [(ngModel)]="movie.title" name="title"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Genre</ion-label>
-          <ion-input [(ngModel)]="movie.genre"></ion-input>
+          <ion-input [(ngModel)]="movie.genre" name="genre"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Release Date</ion-label>
-          <ion-datetime presentation="date" [(ngModel)]="movie.releaseDate"></ion-datetime>
+          <ion-datetime presentation="date" [(ngModel)]="movie.releaseDate" name="releaseDate"></ion-datetime>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Average Rating</ion-label>
-          <ion-input type="number" [(ngModel)]="movie.averageRating"></ion-input>
+          <ion-input type="number" [(ngModel)]="movie.averageRating" name="averageRating"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Director</ion-label>
-          <ion-input [(ngModel)]="movie.director"></ion-input>
+          <ion-input [(ngModel)]="movie.director" name="director"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Synopsis</ion-label>
-          <ion-textarea [(ngModel)]="movie.synopsis"></ion-textarea>
+          <ion-textarea [(ngModel)]="movie.synopsis" name="synopsis"></ion-textarea>
         </ion-item>
 
         <div class="casting">
@@ -53,18 +66,17 @@
           <div *ngFor="let cast of movie.casting; let i = index">
             <ion-item>
               <ion-label position="floating">Actor</ion-label>
-              <ion-input [(ngModel)]="cast.actor"></ion-input>
+              <ion-input [(ngModel)]="movie.casting[i].actor" [name]="'actor' + i"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label position="floating">Role</ion-label>
-              <ion-input [(ngModel)]="cast.role"></ion-input>
+              <ion-input [(ngModel)]="movie.casting[i].role" [name]="'role' + i"></ion-input>
             </ion-item>
           </div>
         </div>
 
         <ion-button expand="block" color="success" (click)="saveMovie()">Save Changes</ion-button>
       </div>
-
-    </div>
+    </form>
   </div>
 </ion-content>

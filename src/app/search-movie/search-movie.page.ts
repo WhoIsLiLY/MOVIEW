@@ -26,8 +26,6 @@ export class SearchMoviePage implements OnInit {
   }
 
   search(){
-    this.router.navigate(['/search-movie', this.query, this.filter]);
-
     if(this.filter === "title"){
       this.queriedMovie = this.movies.filter(movie => movie.title.toLowerCase().includes(this.query.toLowerCase())
     );

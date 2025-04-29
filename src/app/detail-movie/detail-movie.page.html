@@ -94,34 +94,37 @@
         <p><strong>Average Rating:</strong> {{ movie.averageRating }}</p>
         <p><strong>Director:</strong> {{ movie.director }}</p>
         <div class="casting">
-          <strong>Casting:</strong>
-          <ul>
-            <li *ngFor="let cast of movie.casting">{{ cast.actor }} as {{ cast.role }}</li>
-          </ul>
-          <div style="display: flex;">
-            <ion-card *ngFor="let cast of movie.casting" style="width: 200px; height: 300px;" >
-              <ion-card-header>
-                <img [src]="cast.image" [alt]="cast.actor" style=" height: 200px; object-fit: cover;">
-                <ion-card-title style="font-size: medium;">{{cast.actor}}</ion-card-title>
-                <ion-card-subtitle>{{cast.role}}</ion-card-subtitle>
-              </ion-card-header>          
-            </ion-card>
+          <div style="display: flex; flex-direction: column;">
+            <strong>Casting</strong>
+            <ul>
+              <li *ngFor="let cast of movie.casting">{{ cast.actor }} as {{ cast.role }}</li>
+            </ul>
         </div>
         </div>
-        <p><strong>Synopsis:</strong> {{ movie.synopsis }}</p>
+      
+      </div>
+      <div style="display: flex;flex-direction: column; margin: 8px;">
+        <ion-label><strong>Synopsis</strong></ion-label>
+        <ion-label>{{ movie.synopsis }}</ion-label>
       </div>
     </div>
   </div>
 
-
   <div *ngIf="reviews.length > 0" class="reviews">
     <h2>User Reviews</h2>
     <div *ngFor="let review of reviews">
-      <div class="review">
-        <p><strong>{{ review.username }}</strong> ({{ review.date | date }})</p>
-        <p>Rating: {{ review.rating }}/5</p>
-        <p>{{ review.text }}</p>
-      </div>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title><strong>{{ review.username }}</strong> ({{ review.date | date }})</ion-card-title>
+          <div style="display: flex; gap: 4px; margin-top: 4px; align-items: center;">
+            <ion-card-subtitle>Rating: {{ review.rating }}/5 </ion-card-subtitle>
+            <ion-icon name="star" size="small" color="danger"></ion-icon>
+          </div>
+        </ion-card-header>
+        <ion-card-content>
+          {{ review.text }}
+        </ion-card-content>
+      </ion-card>
     </div>
   </div>
 
@@ -138,7 +141,7 @@
     <ion-button expand="block" (click)="submitReview()">Submit Review</ion-button>
   </div>
 
-  <div *ngIf="!isLoggedIn()" style=" margin-bottom: 24px; text-align: center;">
+  <div *ngIf="!isLoggedIn()" style="margin-top: 24px; text-align: center;">
     <ion-label><h1>Login to leave a review</h1></ion-label>
     <ion-label><p>Don't have an account? <a (click)="goToLogin()">Login</a></p></ion-label>
   </div>

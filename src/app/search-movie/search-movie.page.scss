@@ -1,0 +1,21 @@
+.responsive-flex {
+    display: flex;
+    flex-direction: row;
+  }
+  .responsive-img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    max-width: 200px;
+  }
+  
+  @media (max-width: 768px) {
+    .responsive-flex {
+      flex-direction: column;
+    }
+    .responsive-img {
+        max-width: none;
+        object-fit: contain;
+      }
+}
+  

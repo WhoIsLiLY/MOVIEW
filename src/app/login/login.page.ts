@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { MovieService } from '../movie.service';
 
 @Component({
   selector: 'app-login',
@@ -13,17 +14,17 @@ export class LoginPage {
   password: string = '';
   showPassword: boolean = false;
 
-  constructor(private router: Router, private toastController: ToastController) {}
+  constructor(private router: Router, private toastController: ToastController, private movieService: MovieService) { }
 
-  ngOnInit(){
-    if(localStorage.getItem('token')){
+  ngOnInit() {
+    if (localStorage.getItem('token')) {
       this.router.navigate(['/']);
     }
     this.email = '';
     this.password = '';
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.email = '';
     this.password = '';
   }
@@ -32,22 +33,28 @@ export class LoginPage {
     if (!this.email || !this.password) {
       this.showToast('Please enter both email and password', 'warning');
       return;
-    }
+    } else {
+      this.movieService.checkLogin(this.email, this.password).subscribe(
+        (data: any) => {
+          if (data['result'] == "success") {
+            if (data['role'] == "admin") {
+              localStorage.setItem('token', 'your-jwt-token');
+              localStorage.setItem('role', 'admin');
+              this.showToast('Login successful!', 'success');
+              this.router.navigate(['/manage-movie']);
+            } else {
+              localStorage.setItem('token', 'your-jwt-token');
+              localStorage.setItem('role', 'user');
+              this.showToast('Login successful!', 'success');
+              this.router.navigate(['/']);
+            }
+          }
+          else {
+            this.showToast('Invalid email or password', 'danger');
+          }
+        }
+      );
 
-    if (this.email === 'admin@example.com' && this.password === 'admin123') {
-      localStorage.setItem('token', 'your-jwt-token');
-      localStorage.setItem('role', 'admin');
-      this.showToast('Login successful!', 'success');
-      this.router.navigate(['/manage-movie']);
-    } 
-    else if(this.email === 'user@example.com' && this.password === 'user123'){
-      localStorage.setItem('token', 'your-jwt-token');
-      localStorage.setItem('role', 'user');
-      this.showToast('Login successful!', 'success');
-      this.router.navigate(['/']);
-    }
-    else {
-      this.showToast('Invalid email or password', 'danger');
     }
   }
 
@@ -61,6 +68,6 @@ export class LoginPage {
   }
 
   goToRegister() {
-    this.router.navigate(['/register'], {replaceUrl: true});
+    this.router.navigate(['/register'], { replaceUrl: true });
   }
 }

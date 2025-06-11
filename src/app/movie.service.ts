@@ -76,13 +76,13 @@ export class MovieService {
     return this.http.post("https://ubaya.xyz/hybrid/160422007/add_instruction.php", urlEncodedData, { headers });
   }
 
-  checkLogin(username: string, password: string) {
+  checkLogin(email: string, password: string) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     const body = new URLSearchParams();
-    body.set('username', username);
+    body.set('email', email);
     body.set('password', password);
     const urlEncodedData = body.toString();
 
-    return this.http.post("https://ubaya.xyz/hybrid/160422007/check_login.php", urlEncodedData, { headers });
+    return this.http.post("https://ubaya.xyz/hybrid/160422007/login_movies.php", urlEncodedData, { headers });
   }
 }

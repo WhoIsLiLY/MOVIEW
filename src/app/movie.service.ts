@@ -33,26 +33,31 @@ export class MovieService {
   movieDetail(id: number): Observable<any> {
     return this.http.get("https://ubaya.xyz/hybrid/160422007/movies_detail.php?id=" + id);
   }
-  addmovie(p_name: string, p_url: string, p_description: string, p_price: number) {
+  addmovie(title: string, genre: string, releaseDate: string, director: string, synopsis:string, rating : number, actor : string, role : string) {
     //this.movies.push({name:p_name,url:p_url,description:p_description,price:p_price})
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     const body = new URLSearchParams();
-    body.set('name', p_name);
-    body.set('desc', p_description);
-    body.set('url', p_url);
-    body.set('price', p_price.toString());
+    body.set('title', title);
+    body.set('genre', genre);
+    body.set('release_date', releaseDate);
+    body.set('director', director);
+    body.set('synopsis', synopsis);
+    body.set('average_rating', rating.toString());
     const urlEncodedData = body.toString();
     return this.http.post(
-      "https://ubaya.xyz/hybrid/160422007/new_movie.php", urlEncodedData, { headers });
+      "https://ubaya.xyz/hybrid/160422007/newmovie.php", urlEncodedData, { headers });
   }
-  updatemovie(p_id: number, p_name: string, p_url: string, p_description: string, p_price: number) {
+
+  updatemovie(id : number ,title: string, genre: string, releaseDate: string, director: string, synopsis:string, rating : number, actor : string, role : string) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     const body = new URLSearchParams();
-    body.set('id', p_id.toString());
-    body.set('name', p_name);
-    body.set('desc', p_description);
-    body.set('url', p_url);
-    body.set('price', p_price.toString());
+    body.set('id',id.toString());
+    body.set('title', title);
+    body.set('genre', genre);
+    body.set('release_date', releaseDate);
+    body.set('director', director);
+    body.set('synopsis', synopsis);
+    body.set('average_rating', rating.toString());
     const urlEncodedData = body.toString();
 
     return this.http.post("https://ubaya.xyz/hybrid/160422007/update_movie.php", urlEncodedData, { headers });
@@ -63,7 +68,7 @@ export class MovieService {
     const body = new URLSearchParams();
     body.set('id', p_id.toString()); const urlEncodedData = body.toString();
 
-    return this.http.post("https://ubaya.xyz/hybrid/160422007/delete_movie.php", urlEncodedData, { headers });
+    return this.http.post("https://ubaya.xyz/hybrid/160422007/deletemovie.php", urlEncodedData, { headers });
   }
   addInstruction(p_id: number, p_noStep: number, p_instruction: string) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });

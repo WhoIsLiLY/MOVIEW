@@ -16,8 +16,27 @@ export class ManageMoviePage implements OnInit {
   constructor(private router: Router, private toastController: ToastController, private movieService : MovieService) {}
 
   ngOnInit() {
-    this.movies = movies; 
+      this.movieService.movieList("").subscribe(
+      (data) => {
+        this.movies = data;
+        console.log(this.movies);
+        this.movies = this.movies.map((movie, index) => ({
+          ...movie,
+          index
+        }));
+      }
+    ); 
   }
+
+  async showToast(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      color,
+    });
+    await toast.present();
+  }
+
 
   editMovie(id: number) {
     this.router.navigate(['/edit-movie', id]);
@@ -26,7 +45,15 @@ export class ManageMoviePage implements OnInit {
   deleteMovie(id: number) {
     const confirmDelete = confirm('Yakin ingin menghapus movie ini?');
     if (confirmDelete) {
-      this.movies = this.movies.filter(movie => movie.id !== id);
+      this.movieService.deletemovie(id).subscribe(
+         (data) => {
+          if ((data as any).result === 'success') {
+             this.showToast('Movie deleted!', 'success');
+          } else {
+             this.showToast('Failed to delete movie!', 'success');
+          }
+        },
+      )
     }
   }
 

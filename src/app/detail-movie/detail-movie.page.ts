@@ -28,7 +28,6 @@ export class DetailMoviePage implements OnInit {
   newReview = { rating: null, text: '' };
   currentUser = { username: 'John Doe', isLoggedIn: true };
   isDesktop : boolean = true;
-  
 
   constructor(
     private route: ActivatedRoute,

@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { MovieService } from '../movie.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class RegisterPage {
   fullName: string = '';
@@ -16,13 +17,17 @@ export class RegisterPage {
   showPassword: boolean = false;
   showPasswordConfirm: boolean = false;
 
-  constructor(private router: Router, private toastController: ToastController) {}
+  constructor(
+    private router: Router,
+    private toastController: ToastController,
+    private movieService: MovieService
+  ) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.resetForm();
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.resetForm();
   }
 
@@ -45,8 +50,18 @@ export class RegisterPage {
       password: this.password,
     };
 
-    this.showToast('Registration success!', 'success');
-    this.router.navigate(['/login']);
+    this.movieService
+      .register(this.fullName, this.email, this.password)
+      .subscribe(
+        (data) => {
+          if ((data as any).result === 'success') {
+            this.showToast('Registration success!', 'success');
+            this.router.navigate(['/login']);
+          } else {
+            this.showToast('Registration failed', 'danger');
+          }
+        },
+      );
   }
 
   async showToast(message: string, color: string) {
@@ -57,8 +72,8 @@ export class RegisterPage {
     });
     await toast.present();
   }
-  
+
   goToLogin() {
-    this.router.navigate(['/login'], {replaceUrl: true});
+    this.router.navigate(['/login'], { replaceUrl: true });
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
 import { movies, Movie } from '../main/movies-data';
 import { Router } from '@angular/router';
+import  {MovieService} from '../movie.service'
 
 @Component({
   selector: 'app-manage-movie',
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
 export class ManageMoviePage implements OnInit {
   movies: Movie[] = [];
 
-  constructor(private router: Router, private toastController: ToastController) {}
+  constructor(private router: Router, private toastController: ToastController, private movieService : MovieService) {}
 
   ngOnInit() {
     this.movies = movies; 

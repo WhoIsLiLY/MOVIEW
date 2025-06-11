@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Movie, movies } from '../main/movies-data';
 import { ToastController } from '@ionic/angular';
-
+import  {MovieService} from '../movie.service'
 @Component({
   selector: 'app-detail-movie',
   templateUrl: './detail-movie.page.html',
@@ -33,7 +33,8 @@ export class DetailMoviePage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private movieService : MovieService
   ) {}
 
   ngOnInit() {

@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { movies, Movie } from '../main/movies-data';
+import  {MovieService} from '../movie.service'
 
 @Component({
   selector: 'app-edit-movie',
@@ -14,7 +15,7 @@ export class EditMoviePage implements OnInit {
   posterPreviewDesktop: string | ArrayBuffer | null = null;
   posterPreviewMobile: string | ArrayBuffer | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(private route: ActivatedRoute, private router: Router, private movieService : MovieService) {}
 
   ngOnInit() {
     this.movieId = Number(this.route.snapshot.paramMap.get('id'));

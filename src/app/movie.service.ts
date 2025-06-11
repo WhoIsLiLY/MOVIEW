@@ -85,4 +85,15 @@ export class MovieService {
 
     return this.http.post("https://ubaya.xyz/hybrid/160422007/login_movies.php", urlEncodedData, { headers });
   }
+
+   register(full_name : string, email : string, password : string){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    const body = new URLSearchParams();
+    body.set('nama', full_name);
+    body.set('email', email);
+    body.set('password', password);
+    const urlEncodedData = body.toString();
+
+    return this.http.post("https://ubaya.xyz/hybrid/160422007/register_movies.php", urlEncodedData, { headers });
+  }
 }

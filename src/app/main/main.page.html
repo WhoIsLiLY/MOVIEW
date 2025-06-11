@@ -21,26 +21,29 @@
   <div class="navbar">
     <ion-label class="app-title">MOVIEW</ion-label>
     <div style="display: flex; flex: 1; ">
-      <ion-searchbar mode="ios" (keyup.enter)="search($event)" [(ngModel)]="query" ></ion-searchbar>
+      <ion-searchbar mode="ios" (keyup.enter)="search($event)" [(ngModel)]="query"></ion-searchbar>
       <ion-select [(ngModel)]="filter" interface="popover" style="display: flex; align-items: center; width: 20%;">
         <ion-select-option value="title">Title</ion-select-option>
         <ion-select-option value="genre">Genre</ion-select-option>
         <ion-select-option value="actor">Actor</ion-select-option>
       </ion-select>
     </div>
-      <ion-buttons slot="end">
-        <ion-button *ngIf="isLoggedIn()" (click)="logout()" class="auth-btn">
-          <ion-icon slot="start" name="log-out-outline"></ion-icon>
-          Logout
-        </ion-button>
-        <ion-button *ngIf="!isLoggedIn()" routerLink="/login" class="auth-btn">
-          <ion-icon slot="start" name="log-in-outline"></ion-icon>
-          Login
-        </ion-button>
-      </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="isLoggedIn()" (click)="logout()" class="auth-btn">
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        Logout
+      </ion-button>
+      <ion-button *ngIf="!isLoggedIn()" routerLink="/login" class="auth-btn">
+        <ion-icon slot="start" name="log-in-outline"></ion-icon>
+        Login
+      </ion-button>
+    </ion-buttons>
   </div>
-  
-  <div #desktop_layout>
+  <div *ngIf="movies.length === 0" class="loading">
+    <ion-spinner></ion-spinner>
+    Loading movies...
+  </div>
+  <div *ngIf="movies.length > 0" #desktop_layout>
     <div id="main-background-desktop" #mainBackgroundDesktop style=" background: linear-gradient(
             to bottom,
             transparent 0%,
@@ -75,7 +78,7 @@
           </div>
         </div>
       </section>
-      
+
       <section id="movie-slider">
         <!-- <div class="arrow-buttons">
           <button class="arrow-btn" (click)="prevSlide()">
@@ -87,19 +90,20 @@
         </div> -->
         <div class="container">
           <swiper-container #swiper_desktop effect="coverflow" grab-cursor="true" slides-per-view="auto" loop="true"
-            centered-slides="true" centered-slides-bounds="true" coverflow-effect-rotate="0" coverflow-effect-stretch="0"
-            coverflow-effect-depth="250" coverflow-effect-modifier="1" coverflow-effect-slide-shadows="true">
-  
+            centered-slides="true" centered-slides-bounds="true" coverflow-effect-rotate="0"
+            coverflow-effect-stretch="0" coverflow-effect-depth="250" coverflow-effect-modifier="1"
+            coverflow-effect-slide-shadows="true">
+
             <swiper-slide *ngFor="let movie of movies; let i = index" [attr.data-swiper-slide-index]="i">
               <img [src]="movie.poster" [alt]="movie.title" routerLink="/detail-movie/{{ movie.id }}" />
             </swiper-slide>
           </swiper-container>
-        </div>  
+        </div>
       </section>
     </div>
   </div>
-  
-  <div id="mobile-view" #mobile_layout>
+
+  <div id="mobile-view" *ngIf="movies.length > 0" #mobile_layout>
     <section id="movie-slider">
       <div class="container">
         <h1 class="movie-title" style="padding-bottom: 10px;">

@@ -5,6 +5,7 @@ import { Movie, movies } from './movies-data';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { query } from '@angular/animations';
+import { MovieService } from '../movie.service';
 
 register();
 
@@ -22,31 +23,31 @@ export class MainPage implements OnInit {
   @ViewChild('desktop_layout', { static: false }) desktop_layout!: ElementRef;
   isDesktop: boolean = window.innerWidth > 768;
   currentIndex: number = 2;
-  movies: Movie[] = movies;
+  movies: Movie[] = [];
   topRatedMovies: Movie[] = [];
   upcomingMovies: Movie[] = [];
   filter: String = "title";
   query: string = "";
 
-  constructor(private cdr: ChangeDetectorRef, private toastController: ToastController, private router: Router) { }
+  constructor(private cdr: ChangeDetectorRef, private toastController: ToastController, private router: Router, private movieService: MovieService) { }
 
   nextSlide() {
     const swiperInstance = this.isDesktop
       ? this.swiperRefDesktop?.nativeElement?.swiper
       : this.swiperRefMobile?.nativeElement?.swiper;
-  
+
     if (swiperInstance) {
       swiperInstance.slideNext();
     }
     this.updateDeviceType();
     console.log(this.currentIndex);
   }
-  
+
   prevSlide() {
     const swiperInstance = this.isDesktop
       ? this.swiperRefDesktop?.nativeElement?.swiper
       : this.swiperRefMobile?.nativeElement?.swiper;
-  
+
     if (swiperInstance) {
       swiperInstance.slidePrev();
     }
@@ -55,13 +56,21 @@ export class MainPage implements OnInit {
   }
 
   ngOnInit() {
-    this.movies = this.movies.map((movie, index) => ({
-      ...movie,
-      index
-    }));
-    this.updateDeviceType();
-    window.addEventListener('resize', this.updateDeviceType);
-    this.loadMovies();
+    this.movieService.movieList("").subscribe(
+      (data) => {
+        this.movies = data;
+        console.log(this.movies);
+        this.movies = this.movies.map((movie, index) => ({
+          ...movie,
+          index
+        }));
+        this.updateDeviceType();
+        window.addEventListener('resize', this.updateDeviceType);
+        this.loadMovies();
+      }
+    );
+
+
     // console.log(this.topRatedMovies);
     // console.log(this.upcomingMovies);
   }
@@ -181,7 +190,7 @@ export class MainPage implements OnInit {
 
   slideOnChange() {
     setTimeout(() => {
-      
+
       // console.log(this.isDesktop);
       const swiperInstance = this.isDesktop
         ? this.swiperRefDesktop?.nativeElement?.swiper

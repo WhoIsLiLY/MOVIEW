@@ -21,7 +21,7 @@
     <ion-row>
       <ion-col size="12" size-md="6" size-lg="4" *ngFor="let movie of movies">
         <ion-card>
-          <img [src]="movie.poster.replace('mobile', 'desktop')" [alt]="movie.title" />
+          <img class="movie-poster" [src]="movie.poster.replace('mobile', 'desktop')" [alt]="movie.title" />
           <ion-card-header>
             <ion-card-title>{{ movie.title }}</ion-card-title>
             <ion-card-subtitle>{{ movie.genre }}</ion-card-subtitle>

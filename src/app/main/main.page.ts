@@ -27,8 +27,6 @@ export class MainPage implements OnInit {
   upcomingMovies: Movie[] = [];
   filter: String = "title";
   query: string = "";
-  desktopSwiperInstance: any = null;
-  mobileSwiperInstance: any = null;
 
   constructor(private cdr: ChangeDetectorRef, private toastController: ToastController, private router: Router) { }
 
@@ -57,7 +55,6 @@ export class MainPage implements OnInit {
   }
 
   ngOnInit() {
-    // Add index property to each movie for tracking
     this.movies = this.movies.map((movie, index) => ({
       ...movie,
       index

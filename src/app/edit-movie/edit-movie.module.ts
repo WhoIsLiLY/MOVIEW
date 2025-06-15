@@ -8,12 +8,15 @@ import { EditMoviePageRoutingModule } from './edit-movie-routing.module';
 
 import { EditMoviePage } from './edit-movie.page';
 
+import { ReactiveFormsModule } from '@angular/forms';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    EditMoviePageRoutingModule
+    EditMoviePageRoutingModule,
+    ReactiveFormsModule
   ],
   declarations: [EditMoviePage]
 })

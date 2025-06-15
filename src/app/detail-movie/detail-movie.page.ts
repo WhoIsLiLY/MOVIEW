@@ -33,7 +33,7 @@ export class DetailMoviePage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private toastController: ToastController,
-    private movieService : MovieService
+    private movieService : MovieService,    
   ) {}
 
   ngOnInit() {

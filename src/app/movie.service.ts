@@ -33,34 +33,45 @@ export class MovieService {
   movieDetail(id: number): Observable<any> {
     return this.http.get("https://ubaya.xyz/hybrid/160422007/movies_detail.php?id=" + id);
   }
-  addmovie(title: string, genre: string, releaseDate: string, director: string, synopsis:string, rating : number, actor : string, role : string) {
+  addmovie(title: string, genre: string, poster :string, releaseDate: string, director: string, synopsis:string, rating : number, 
+    actor : string[], role : string[], image : string[], trailer: string) {
     //this.movies.push({name:p_name,url:p_url,description:p_description,price:p_price})
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     const body = new URLSearchParams();
     body.set('title', title);
     body.set('genre', genre);
+    body.set('poster', poster);
     body.set('release_date', releaseDate);
     body.set('director', director);
     body.set('synopsis', synopsis);
     body.set('average_rating', rating.toString());
+    body.set('trailer', trailer);
+    actor.forEach((a) => body.append('actor[]', a));
+    role.forEach((r) => body.append('role[]', r));
+    image.forEach((img) => body.append('image[]', img));
     const urlEncodedData = body.toString();
     return this.http.post(
       "https://ubaya.xyz/hybrid/160422007/newmovie.php", urlEncodedData, { headers });
   }
 
-  updatemovie(id : number ,title: string, genre: string, releaseDate: string, director: string, synopsis:string, rating : number, actor : string, role : string) {
+  updatemovie(id : number ,title: string, genre: string, poster :string, releaseDate: string, director: string, synopsis:string, rating : number, 
+    actor : string[], role : string[], image : string[], trailer: string) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     const body = new URLSearchParams();
-    body.set('id',id.toString());
-    body.set('title', title);
+   body.set('title', title);
     body.set('genre', genre);
+    body.set('poster', poster);
     body.set('release_date', releaseDate);
     body.set('director', director);
     body.set('synopsis', synopsis);
     body.set('average_rating', rating.toString());
+    body.set('trailer', trailer);
+    actor.forEach((a) => body.append('actor[]', a));
+    role.forEach((r) => body.append('role[]', r));
+    image.forEach((img) => body.append('image[]', img));
     const urlEncodedData = body.toString();
 
-    return this.http.post("https://ubaya.xyz/hybrid/160422007/update_movie.php", urlEncodedData, { headers });
+    return this.http.post("https://ubaya.xyz/hybrid/160422007/editmovie.php", urlEncodedData, { headers });
   }
 
   deletemovie(p_id: number) {

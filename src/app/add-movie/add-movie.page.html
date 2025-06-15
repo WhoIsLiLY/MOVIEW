@@ -9,40 +9,68 @@
 
 <ion-content [fullscreen]="true">
   <div class="movie-container">
-
-    <form [formGroup]="movieForm" (ngSubmit)="addMovie()" class="inner-container">
-
+    <form
+      [formGroup]="movieForm"
+      (ngSubmit)="addMovie()"
+      class="inner-container"
+    >
       <!-- Poster Preview & Upload -->
       <div class="left-column">
         <!-- DESKTOP Upload -->
         <h3>Poster Desktop</h3>
-        <div class="poster-upload" (click)="triggerFileInput('desktop')" [class.has-image]="posterPreviewDesktop">
+        <div
+          class="poster-upload"
+          (click)="triggerFileInput('desktop')"
+          [class.has-image]="posterPreviewDesktop"
+        >
           <ng-container *ngIf="!posterPreviewDesktop">
             <span>Upload Poster Desktop</span>
           </ng-container>
-          <img *ngIf="posterPreviewDesktop" [src]="posterPreviewDesktop" class="upload-img" />
+          <img
+            *ngIf="posterPreviewDesktop"
+            [src]="posterPreviewDesktop"
+            class="upload-img"
+          />
           <div class="overlay" *ngIf="posterPreviewDesktop"></div>
-          <input id="desktopInput" type="file" accept="image/*" hidden (change)="onDesktopImageSelected($event)" />
+          <input
+            id="desktopInput"
+            type="file"
+            accept="image/*"
+            hidden
+            (change)="onDesktopImageSelected($event)"
+          />
         </div>
 
-        <br>
+        <br />
 
         <!-- MOBILE Upload -->
         <h3>Poster Mobile</h3>
-        <div class="poster-upload" (click)="triggerFileInput('mobile')" [class.has-image]="posterPreviewMobile">
+        <div
+          class="poster-upload"
+          (click)="triggerFileInput('mobile')"
+          [class.has-image]="posterPreviewMobile"
+        >
           <ng-container *ngIf="!posterPreviewMobile">
             <span>Upload Poster Mobile</span>
           </ng-container>
-          <img *ngIf="posterPreviewMobile" [src]="posterPreviewMobile" class="upload-img" />
+          <img
+            *ngIf="posterPreviewMobile"
+            [src]="posterPreviewMobile"
+            class="upload-img"
+          />
           <div class="overlay" *ngIf="posterPreviewMobile"></div>
-          <input id="mobileInput" type="file" accept="image/*" hidden (change)="onMobileImageSelected($event)" />
+          <input
+            id="mobileInput"
+            type="file"
+            accept="image/*"
+            hidden
+            (change)="onMobileImageSelected($event)"
+          />
         </div>
-
       </div>
 
       <!-- Movie Information Form -->
       <div class="movie-info">
-
         <ion-item>
           <ion-label position="floating">Judul</ion-label>
           <ion-input formControlName="title"></ion-input>
@@ -55,12 +83,21 @@
 
         <ion-item>
           <ion-label position="floating">Tanggal Rilis</ion-label>
-          <ion-datetime formControlName="releaseDate" presentation="date"></ion-datetime>
+          <ion-datetime
+            formControlName="releaseDate"
+            presentation="date"
+          ></ion-datetime>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Rating</ion-label>
-          <ion-input type="number" formControlName="averageRating" min="0" max="10" step="0.1"></ion-input>
+          <ion-input
+            type="number"
+            formControlName="averageRating"
+            min="0"
+            max="10"
+            step="0.1"
+          ></ion-input>
         </ion-item>
 
         <ion-item>
@@ -69,23 +106,61 @@
         </ion-item>
 
         <ion-item>
-          <ion-label position="floating">Casting (pisahkan dengan koma)</ion-label>
-          <ion-input formControlName="casting"></ion-input>
+          <ion-label position="floating">Trailer URL</ion-label>
+          <ion-input formControlName="trailer"></ion-input>
         </ion-item>
+
+        <ion-list formArrayName="casting">
+          <ion-item-divider color="light">Casting</ion-item-divider>
+
+          <div
+            *ngFor="let cast of casting.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <ion-item>
+              <ion-label position="floating">Actor Name</ion-label>
+              <ion-input formControlName="actor_name"></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">Role</ion-label>
+              <ion-input formControlName="role"></ion-input>
+            </ion-item>
+
+             <ion-item>
+              <ion-label position="floating">Image URL</ion-label>
+              <ion-input formControlName="image"></ion-input>
+            </ion-item>
+
+            <ion-button
+              color="danger"
+              expand="block"
+              (click)="removeCasting(i)"
+              *ngIf="casting.length > 1"
+              style="padding: 10px;"
+              >Remove</ion-button
+            >
+          </div>
+
+          <ion-button expand="block" (click)="addCasting()" style="padding: 10px;"
+            >+ Add More Casting</ion-button
+          >
+        </ion-list>
 
         <ion-item>
           <ion-label position="floating">Synopsis</ion-label>
           <ion-textarea formControlName="synopsis"></ion-textarea>
         </ion-item>
 
-        <ion-button expand="block" type="submit" [disabled]="movieForm.invalid" color="success">
+        <ion-button
+          expand="block"
+          type="submit"
+          [disabled]="movieForm.invalid"
+          color="success"
+        >
           Simpan
         </ion-button>
-        
       </div>
-
     </form>
   </div>
 </ion-content>
-
-

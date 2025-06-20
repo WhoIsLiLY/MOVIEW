@@ -63,9 +63,9 @@
           </h1>
           <div class="movie-meta-desktop">
             <span class="imdb-badge">‎ ★ ‎ </span>
-            <span class="rating">{{ movies[currentIndex].averageRating }} (12.827) </span>
-            <span>• {{ isReleased(movies[currentIndex].releaseDate) ? 'Now Playing' : 'Upcoming' }} </span>
-            <span>• {{ movies[currentIndex].releaseDate }} </span>
+            <span class="rating">{{ movies[currentIndex].average_rating }} (12.827) </span>
+            <span>• {{ isReleased(movies[currentIndex].release_date) ? 'Now Playing' : 'Upcoming' }} </span>
+            <span>• {{ movies[currentIndex].release_date }} </span>
             <span>• {{ movies[currentIndex].genre }}</span>
           </div>
           <p class="movie-desc-desktop">
@@ -107,7 +107,7 @@
     <section id="movie-slider">
       <div class="container">
         <h1 class="movie-title" style="padding-bottom: 10px;">
-          {{ isReleased(movies[currentIndex].releaseDate) ? 'NOW PLAYING' : 'UPCOMING' }}
+          {{ isReleased(movies[currentIndex].release_date) ? 'NOW PLAYING' : 'UPCOMING' }}
         </h1>
         <swiper-container #swiper_mobile effect="coverflow" grab-cursor="true" slides-per-view="auto" loop="true"
           centered-slides="true" centered-slides-bounds="true" coverflow-effect-rotate="0" coverflow-effect-stretch="0"
@@ -135,7 +135,7 @@
         </div>
         <div class="detail-item">
           <p class="sentence">
-            Saksikan pada tanggal <span class="value">{{ movies[currentIndex].releaseDate }}</span>!
+            Saksikan pada tanggal <span class="value">{{ movies[currentIndex].release_date }}</span>!
           </p>
         </div>
       </div>
@@ -148,7 +148,7 @@
         <img [src]="movie.poster" [alt]="movie.title" routerLink="/detail-movie/{{ movie.id }}" />
         <div class="movie-info">
           <h3>{{ movie.title }}</h3>
-          <p>⭐ {{ movie.averageRating }}</p>
+          <p>⭐ {{ movie.average_rating }}</p>
           <button ion-button>Detail</button>
         </div>
       </div>
@@ -162,7 +162,7 @@
         <img [src]="movie.poster" [alt]="movie.title" routerLink="/detail-movie/{{ movie.id }}" />
         <div class="movie-info">
           <h3>{{ movie.title }}</h3>
-          <p>📅 {{ movie.releaseDate }}</p>
+          <p>📅 {{ movie.release_date }}</p>
           <button ion-button>Detail</button>
         </div>
       </div>

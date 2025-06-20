@@ -1,11 +1,10 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { register } from 'swiper/element/bundle';
 import { SwiperOptions } from 'swiper/types';
-import { Movie, movies } from './movies-data';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { query } from '@angular/animations';
-import { MovieService } from '../movie.service';
+import { MovieService, Movie } from '../movie.service';
 
 register();
 
@@ -98,8 +97,8 @@ export class MainPage implements OnInit {
 
   loadMovies() {
     this.topRatedMovies = this.movies
-      .filter(movie => (movie.averageRating || 0) >= 0)
-      .sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0))
+      .filter(movie => (movie.average_rating || 0) >= 0)
+      .sort((a, b) => (b.average_rating || 0) - (a.average_rating || 0))
       .slice(0, 5)
       .map(movie => ({
         ...movie,
@@ -107,8 +106,8 @@ export class MainPage implements OnInit {
       }));
 
     this.upcomingMovies = this.movies
-      .filter(movie => new Date(movie.releaseDate) > new Date())
-      .sort((a, b) => new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime())
+      .filter(movie => new Date(movie.release_date) > new Date())
+      .sort((a, b) => new Date(a.release_date).getTime() - new Date(b.release_date).getTime())
       .slice(0, 5)
       .map(movie => ({
         ...movie,
@@ -117,23 +116,23 @@ export class MainPage implements OnInit {
   }
 
 
-  isReleased(releaseDate: string): boolean {
-    return new Date(releaseDate) <= new Date();
+  isReleased(release_date: string): boolean {
+    return new Date(release_date) <= new Date();
   }
 
   getMovieMessage(): string {
     const movie = this.movies?.[this.currentIndex]; // Cek apakah movies tersedia
 
-    if (!movie || movie.averageRating == null) { // Cek jika rating tidak ada
+    if (!movie || movie.average_rating == null) { // Cek jika rating tidak ada
       return 'Film ini bentar lagi tayang lho! Ayo pre-order sekarang!';
     }
 
-    if (movie.averageRating >= 9) {
-      return `Film ini dapat rating ⭐ ${movie.averageRating} dari penonton lho! Wajib ditonton!`;
-    } else if (movie.averageRating >= 6) {
-      return `Film ini punya rating ⭐ ${movie.averageRating} nih. Masih seru buat ditonton!`;
-    } else if (movie.averageRating > 0) {
-      return `Ratingnya ⭐ ${movie.averageRating}. Tapi siapa tahu kamu tetap suka!`;
+    if (movie.average_rating >= 9) {
+      return `Film ini dapat rating ⭐ ${movie.average_rating} dari penonton lho! Wajib ditonton!`;
+    } else if (movie.average_rating >= 6) {
+      return `Film ini punya rating ⭐ ${movie.average_rating} nih. Masih seru buat ditonton!`;
+    } else if (movie.average_rating > 0) {
+      return `Ratingnya ⭐ ${movie.average_rating}. Tapi siapa tahu kamu tetap suka!`;
     } else {
       return 'Belum ada yang rate movie ini nih, yuk jadi yang pertama untuk rate!';
     }

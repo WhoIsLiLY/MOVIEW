@@ -38,12 +38,12 @@ export class LoginPage {
         (data: any) => {
           if (data['result'] == "success") {
             if (data['role'] == "admin") {
-              localStorage.setItem('token', 'your-jwt-token');
+              localStorage.setItem('token', data['id']);
               localStorage.setItem('role', 'admin');
               this.showToast('Login successful!', 'success');
               this.router.navigate(['/manage-movie']);
             } else {
-              localStorage.setItem('token', 'your-jwt-token');
+              localStorage.setItem('token', data['id']);
               localStorage.setItem('role', 'user');
               this.showToast('Login successful!', 'success');
               this.router.navigate(['/']);

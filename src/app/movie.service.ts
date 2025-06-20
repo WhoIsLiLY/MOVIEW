@@ -6,8 +6,8 @@ export interface Movie {
   title: string;
   poster: string;
   genre: string;
-  releaseDate: string;
-  averageRating: number | null;
+  release_date: string;
+  average_rating: number | null;
   director: string;
   casting: { actor: string; role: string, image: string }[];
   synopsis: string;
@@ -33,8 +33,8 @@ export class MovieService {
   movieDetail(id: number): Observable<any> {
     return this.http.get("https://ubaya.xyz/hybrid/160422007/movies_detail.php?id=" + id);
   }
-  addmovie(title: string, genre: string, poster :string, releaseDate: string, director: string, synopsis:string, rating : number, 
-    actor : string[], role : string[], image : string[], trailer: string) {
+  addmovie(title: string, genre: string, poster: string, releaseDate: string, director: string, synopsis: string, rating: number,
+    actor: string[], role: string[], image: string[], trailer: string) {
     //this.movies.push({name:p_name,url:p_url,description:p_description,price:p_price})
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     const body = new URLSearchParams();
@@ -54,11 +54,11 @@ export class MovieService {
       "https://ubaya.xyz/hybrid/160422007/newmovie.php", urlEncodedData, { headers });
   }
 
-  updatemovie(id : number ,title: string, genre: string, poster :string, releaseDate: string, director: string, synopsis:string, rating : number, 
-    actor : string[], role : string[], image : string[], trailer: string) {
+  updatemovie(id: number, title: string, genre: string, poster: string, releaseDate: string, director: string, synopsis: string, rating: number,
+    actor: string[], role: string[], image: string[], trailer: string) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     const body = new URLSearchParams();
-   body.set('title', title);
+    body.set('title', title);
     body.set('genre', genre);
     body.set('poster', poster);
     body.set('release_date', releaseDate);
@@ -102,7 +102,7 @@ export class MovieService {
     return this.http.post("https://ubaya.xyz/hybrid/160422007/login_movies.php", urlEncodedData, { headers });
   }
 
-   register(full_name : string, email : string, password : string){
+  register(full_name: string, email: string, password: string) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     const body = new URLSearchParams();
     body.set('nama', full_name);
@@ -111,5 +111,25 @@ export class MovieService {
     const urlEncodedData = body.toString();
 
     return this.http.post("https://ubaya.xyz/hybrid/160422007/register_movies.php", urlEncodedData, { headers });
+  }
+  addReview(movieId: string, userId: string, rating: string, text: string) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    const body = new URLSearchParams();
+    body.set('movie_id', movieId.toString());
+    body.set('user_id', userId.toString());
+    body.set('rating', rating.toString());
+    body.set('text', text);
+    const urlEncodedData = body.toString();
+    return this.http.post("https://ubaya.xyz/hybrid/160422007/add_review.php", urlEncodedData, { headers });
+  }
+  fetchDetailMovie(id: string) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    const body = new URLSearchParams();
+    body.set('id', id);
+    const urlEncodedData = body.toString();
+    return this.http.post("https://ubaya.xyz/hybrid/160422007/movies_detail.php", urlEncodedData, { headers })
+      .pipe(
+        tap(response => console.log('api response:', response))
+      );;
   }
 }

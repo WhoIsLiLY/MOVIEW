@@ -39,6 +39,9 @@ export class AddMoviePage implements OnInit {
     });
   }
 
+  private posterFileDesktop: File | null = null;
+  private posterFileMobile: File | null = null;
+
   get casting(): FormArray {
     return this.movieForm.get('casting') as FormArray;
   }
@@ -74,6 +77,7 @@ export class AddMoviePage implements OnInit {
   onDesktopImageSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      this.posterFileDesktop = file;
       const reader = new FileReader();
       reader.onload = () => {
         this.posterPreviewDesktop = reader.result as string;
@@ -85,6 +89,7 @@ export class AddMoviePage implements OnInit {
   onMobileImageSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      this.posterFileMobile = file;
       const reader = new FileReader();
       reader.onload = () => {
         this.posterPreviewMobile = reader.result as string;
@@ -126,35 +131,51 @@ export class AddMoviePage implements OnInit {
     const selectedPoster =
       this.posterPreviewDesktop || this.posterPreviewMobile;
 
-    this.movieService
-      .addmovie(
-        title,
-        genre,
-        '',
-        releaseDate,
-        director,
-        synopsis,
-        averageRating,
-        actors,
-        roles,
-        images,
-        trailer
-      )
-      .subscribe((data) => {
-        this.showToast('Movie has been added', 'success');
-        this.router.navigate(['/manage-movie']);
-      });
-    // const newMovie: Movie = {
-    //   id: Date.now(),
-    //   ...this.movieForm.value,
-    //   poster: selectedPoster, // <-- simpan poster di sini
-    //   casting: this.movieForm.value.casting
-    //     ? this.movieForm.value.casting
-    //         .split(',')
-    //         .map((actor: string) => actor.trim())
-    //     : [],
-    // };
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('genre', genre);
+    formData.append('poster', '');
+    formData.append('release_date', releaseDate);
+    formData.append('average_rating', averageRating.toString());
+    formData.append('director', director);
+    formData.append('synopsis', synopsis);
+    formData.append('trailer', trailer);
 
-    // movies.push(newMovie);
+    if (this.posterFileDesktop) {
+      formData.append('poster_desktop', this.posterFileDesktop);
+    }
+    if (this.posterFileMobile) {
+      formData.append('poster_mobile', this.posterFileMobile);
+    }
+
+    castings.forEach((c: any, index: number) => {
+      formData.append(`actor[]`, c.actor_name);
+      formData.append(`role[]`, c.role);
+      formData.append(`image[]`, c.image); // If image is file, use File, not base64 string
+    });
+
+    this.movieService.addmovieForm(formData).subscribe((data) => {
+      this.showToast('Movie has been added', 'success');
+      this.router.navigate(['/manage-movie']);
+    });
+
+    // this.movieService
+    //   .addmovie(
+    //     title,
+    //     genre,
+    //     '',
+    //     releaseDate,
+    //     director,
+    //     synopsis,
+    //     averageRating,
+    //     actors,
+    //     roles,
+    //     images,
+    //     trailer
+    //   )
+    //   .subscribe((data) => {
+    //     this.showToast('Movie has been added', 'success');
+    //     this.router.navigate(['/manage-movie']);
+    //   });
   }
 }

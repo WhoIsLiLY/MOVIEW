@@ -55,6 +55,7 @@ export class EditMoviePage implements OnInit {
 
       // Set field biasa
       this.movieForm.patchValue({
+        id: this.movie?.id,
         title: this.movie?.title,
         genre: this.movie?.genre,
         releaseDate: this.movie?.releaseDate,
@@ -178,6 +179,7 @@ export class EditMoviePage implements OnInit {
     const trailer = formValue.trailer;
 
     const formData = new FormData();
+    formData.append('id', this.movieId.toString());
     formData.append('title', formValue.title);
     formData.append('genre', formValue.genre);
     formData.append('poster', '');

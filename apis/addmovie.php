@@ -4,12 +4,14 @@ ini_set('display_errors', 1);
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
+header("Content-Type: application/json");
 
 $servername = "localhost";
 $username = "hybrid_160422007";
 $password = "ubaya";
 $dbname = "hybrid_160422007";
 
+// --- LOKASI FOLDER ASET ---
 $desktop_dir = "/var/www/html/hybrid/160422007/assets/movies/desktop/";
 $mobile_dir = "/var/www/html/hybrid/160422007/assets/movies/mobile/";
 
@@ -19,80 +21,83 @@ if ($conn->connect_error) {
     exit();
 }
 
-extract($_POST);
-$poster_placeholder = ""; 
-$stmt = $conn->prepare(
-    "INSERT INTO movies (title, genre, poster, release_date, average_rating, director, synopsis, trailer_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-);
-$stmt->bind_param("ssssdsss", $title, $genre, $poster_placeholder, $release_date, $average_rating, $director, $synopsis, $trailer);
+extract($_POST); // Dapatkan $id, $title, $poster (URL lama), dll.
 
-if ($stmt->execute()) {
-    $movie_id = $conn->insert_id;
-    $success = true; 
-    $arr = [];
+$success = true; // Asumsikan sukses di awal
+$arr = [];
+$poster_url_to_save = $poster; // Default: gunakan URL poster lama jika tidak ada file baru
 
-    // --- PROSES FILE UPLOAD (SEKARANG OPSIONAL) ---
-    // Hanya jalankan blok ini jika kedua file poster ada dan berhasil diunggah tanpa error.
-    if (isset($_FILES['poster_desktop']) && $_FILES['poster_desktop']['error'] == 0 &&
-        isset($_FILES['poster_mobile']) && $_FILES['poster_mobile']['error'] == 0) {
-        
-        $desktop_ext = pathinfo($_FILES['poster_desktop']['name'], PATHINFO_EXTENSION);
-        $mobile_ext = pathinfo($_FILES['poster_mobile']['name'], PATHINFO_EXTENSION);
-        
-        $new_poster_filename = "p_" . $movie_id . "." . $desktop_ext;
-        
-        $desktop_target_path = $desktop_dir . $new_poster_filename;
-        $mobile_target_path = $mobile_dir . "p_" . $movie_id . "." . $mobile_ext;
-
-        // Pindahkan file dan update database
-        if (move_uploaded_file($_FILES['poster_desktop']['tmp_name'], $desktop_target_path) && move_uploaded_file($_FILES['poster_mobile']['tmp_name'], $mobile_target_path)) {
-            $stmt_update = $conn->prepare("UPDATE movies SET poster = ? WHERE id = ?");
-            $stmt_update->bind_param("si", $new_poster_filename, $movie_id);
-
-            // Jika update gagal, anggap seluruh proses gagal
-            if (!$stmt_update->execute()) {
-                $success = false;
-                $arr = ["result" => "error", "message" => "Gagal memperbarui nama poster di database."];
-            }
-            $stmt_update->close();
-        } else {
-            // Jika pemindahan file gagal, anggap seluruh proses gagal
-            $success = false;
-            $arr = ["result" => "error", "message" => "Gagal memindahkan file poster yang diunggah."];
-        }
+// --- 1. PROSES FILE POSTER BARU (JIKA DIUNGGAH) ---
+if (isset($_FILES['poster_desktop']) && $_FILES['poster_desktop']['error'] == 0 &&
+    isset($_FILES['poster_mobile']) && $_FILES['poster_mobile']['error'] == 0) {
+    
+    // a. Hapus file poster lama terlebih dahulu
+    $desktop_pattern = $desktop_dir . "p_" . $id . ".*";
+    $mobile_pattern = $mobile_dir . "p_" . $id . ".*";
+    $files_to_delete = array_merge(glob($desktop_pattern), glob($mobile_pattern));
+    foreach ($files_to_delete as $file) {
+        if (file_exists($file)) unlink($file);
     }
 
-    // --- INSERT DATA CASTING (HANYA JIKA PROSES SEBELUMNYA SUKSES) ---
-    if ($success) {
-        $actorArray = isset($_POST['actor']) ? $_POST['actor'] : [];
-        $roleArray = isset($_POST['role']) ? $_POST['role'] : [];
-        $imageArray = isset($_POST['image']) ? $_POST['image'] : [];
+    // b. Proses file baru (logika sama seperti 'add')
+    $desktop_ext = pathinfo($_FILES['poster_desktop']['name'], PATHINFO_EXTENSION);
+    $mobile_ext = pathinfo($_FILES['poster_mobile']['name'], PATHINFO_EXTENSION);
+    
+    $new_poster_filename = "p_" . $id . "." . $desktop_ext;
+    
+    $desktop_target_path = $desktop_dir . $new_poster_filename;
+    $mobile_target_path = $mobile_dir . "p_" . $id . "." . $mobile_ext;
 
-        for ($i = 0; $i < count($actorArray); $i++) {
-            $actor = $actorArray[$i];
-            $role = $roleArray[$i];
-            $image = $imageArray[$i];
-
-            $stmt2 = $conn->prepare("INSERT INTO casting (movie_id, actor, role, image) VALUES (?, ?, ?, ?)");
-            $stmt2->bind_param("isss", $movie_id, $actor, $role, $image);
-
-            if (!$stmt2->execute()) {
-                $success = false;
-                $arr = ["result" => "error", "message" => "Gagal simpan data casting untuk aktor: " . $actor];
-                break; 
-            }
-            $stmt2->close();
-        }
-        
-        if ($success) {
-            $arr = ["result" => "success", "movie_id" => $movie_id];
-        }
+    // c. Buat URL publik baru dan pindahkan file
+    if (move_uploaded_file($_FILES['poster_desktop']['tmp_name'], $desktop_target_path) && move_uploaded_file($_FILES['poster_mobile']['tmp_name'], $mobile_target_path)) {
+        // Jika berhasil, perbarui variabel URL yang akan disimpan ke DB
+        $poster_url_to_save = "https://ubaya.xyz/hybrid/160422007/assets/movies/desktop/" . $new_poster_filename;
+    } else {
+        $success = false;
+        $arr = ["result" => "error", "message" => "Gagal memindahkan file poster baru yang diunggah."];
     }
-} else {
-    $arr = ["result" => "error", "message" => "Gagal simpan data movies: " . $stmt->error];
+}
+
+// --- 2. UPDATE DATA (HANYA JIKA TIDAK ADA ERROR SEBELUMNYA) ---
+if ($success) {
+    // Gunakan $poster_url_to_save yang berisi URL lama atau URL baru
+    $stmt = $conn->prepare(
+        "UPDATE movies SET title=?, genre=?, poster=?, release_date=?, average_rating=?, director=?, synopsis=?, trailer_url=? WHERE id=?"
+    );
+    $stmt->bind_param("ssssdsssi", $title, $genre, $poster_url_to_save, $release_date, $average_rating, $director, $synopsis, $trailer, $id);
+
+    if ($stmt->execute()) {
+        // --- 3. UPDATE CASTING: HAPUS LAMA, INSERT BARU ---
+        $stmtDelete = $conn->prepare("DELETE FROM casting WHERE movie_id = ?");
+        $stmtDelete->bind_param("i", $id);
+        $stmtDelete->execute();
+        $stmtDelete->close();
+
+        // Insert casting baru
+        if (isset($_POST['actor']) && isset($_POST['role'])) {
+            $actorArray = $_POST['actor'];
+            $roleArray = $_POST['role'];
+            $imageArray = isset($_POST['image']) ? $_POST['image'] : array_fill(0, count($actorArray), '');
+
+            for ($i = 0; $i < count($actorArray); $i++) {
+                $actor = $actorArray[$i];
+                $role = $roleArray[$i];
+                $image = $imageArray[$i] ?? '';
+
+                $stmtInsert = $conn->prepare("INSERT INTO casting (movie_id, actor, role, image) VALUES (?, ?, ?, ?)");
+                $stmtInsert->bind_param("isss", $id, $actor, $role, $image);
+                $stmtInsert->execute();
+                $stmtInsert->close();
+            }
+        }
+        $arr = ["result" => "success", "message" => "Data film berhasil diperbarui."];
+
+    } else {
+        $arr = ["result" => "error", "message" => "Gagal memperbarui data film di database."];
+    }
+    $stmt->close();
 }
 
 echo json_encode($arr);
-$stmt->close();
 $conn->close();
 ?>

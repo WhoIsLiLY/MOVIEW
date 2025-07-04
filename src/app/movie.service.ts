@@ -58,6 +58,7 @@ export class MovieService {
     actor: string[], role: string[], image: string[], trailer: string) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     const body = new URLSearchParams();
+    body.set('id', id.toString());
     body.set('title', title);
     body.set('genre', genre);
     body.set('poster', poster);

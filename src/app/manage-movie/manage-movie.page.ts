@@ -20,9 +20,11 @@ export class ManageMoviePage implements OnInit {
       (data) => {
         this.movies = data;
         console.log(this.movies);
-        this.movies = this.movies.map((movie, index) => ({
+        this.movies = (data as any[]).map((movie, index) => ({
           ...movie,
-          index
+          index,
+          releaseDate: movie.release_date,       
+          averageRating: movie.average_rating,   
         }));
       }
     ); 

@@ -9,13 +9,13 @@
 
 <ion-content [fullscreen]="true">
   <div class="movie-container" *ngIf="movie">
-    <form class="inner-container">
+    <form class="inner-container" [formGroup]="movieForm">
       <!-- Kolom Kiri: Upload Poster -->
       <div class="left-column">
         <!-- Poster Desktop -->
         <div class="img-upload-wrapper">
           <h3>Poster Desktop</h3>
-          <img [src]="posterPreviewDesktop || getPosterPath(movie?.poster)"  alt="Poster Desktop" class="upload-img" (click)="desktopInput.click()" />
+          <img [src]="posterPreviewDesktop || getPosterPath(movie?.poster)" alt="Poster Desktop" class="upload-img" (click)="desktopInput.click()" />
           <input type="file" accept="image/*" hidden #desktopInput (change)="onDesktopImageSelected($event)" />
         </div>
 
@@ -31,50 +31,79 @@
       <div class="movie-info">
         <ion-item>
           <ion-label position="floating">Title</ion-label>
-          <ion-input [(ngModel)]="movie.title" name="title"></ion-input>
+          <ion-input formControlName="title"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Genre</ion-label>
-          <ion-input [(ngModel)]="movie.genre" name="genre"></ion-input>
+          <ion-input formControlName="genre"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Release Date</ion-label>
-          <ion-datetime presentation="date" [(ngModel)]="movie.releaseDate" name="releaseDate"></ion-datetime>
+          <ion-datetime presentation="date" formControlName="releaseDate"></ion-datetime>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Average Rating</ion-label>
-          <ion-input type="number" [(ngModel)]="movie.averageRating" name="averageRating"></ion-input>
+          <ion-input type="number" formControlName="averageRating"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Director</ion-label>
-          <ion-input [(ngModel)]="movie.director" name="director"></ion-input>
+          <ion-input formControlName="director"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Synopsis</ion-label>
-          <ion-textarea [(ngModel)]="movie.synopsis" name="synopsis"></ion-textarea>
+          <ion-textarea formControlName="synopsis"></ion-textarea>
         </ion-item>
 
-        <div class="casting">
-          <h3>Casting</h3>
-          <div *ngFor="let cast of movie.casting; let i = index">
+        <ion-item>
+          <ion-label position="floating">Trailer</ion-label>
+          <ion-textarea formControlName="trailer"></ion-textarea>
+        </ion-item>
+
+        <ion-list formArrayName="casting">
+          <ion-item-divider color="light">Casting</ion-item-divider>
+
+          <div
+            *ngFor="let cast of casting.controls; let i = index"
+            [formGroupName]="i"
+          >
             <ion-item>
-              <ion-label position="floating">Actor</ion-label>
-              <ion-input [(ngModel)]="movie.casting[i].actor" [name]="'actor' + i"></ion-input>
+              <ion-label position="floating">Actor Name</ion-label>
+              <ion-input formControlName="actor_name"></ion-input>
             </ion-item>
+
             <ion-item>
               <ion-label position="floating">Role</ion-label>
-              <ion-input [(ngModel)]="movie.casting[i].role" [name]="'role' + i"></ion-input>
+              <ion-input formControlName="role"></ion-input>
             </ion-item>
+
+             <ion-item>
+              <ion-label position="floating">Image URL</ion-label>
+              <ion-input formControlName="image"></ion-input>
+            </ion-item>
+
+            <ion-button
+              color="danger"
+              expand="block"
+              (click)="removeCasting(i)"
+              *ngIf="casting.length > 1"
+              style="padding: 10px;"
+              >Remove</ion-button
+            >
           </div>
-        </div>
+
+          <ion-button expand="block" (click)="addCasting()" style="padding: 10px;"
+            >+ Add More Casting</ion-button
+          >
+        </ion-list>
 
         <ion-button expand="block" color="success" (click)="saveMovie()">Save Changes</ion-button>
       </div>
     </form>
+
   </div>
 </ion-content>

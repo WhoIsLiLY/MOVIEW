@@ -31,14 +31,24 @@ export class EditMoviePage implements OnInit {
       releaseDate: ['', Validators.required],
       averageRating: ['', [Validators.min(0), Validators.max(10)]],
       director: [''],
-      casting: this.fb.array([this.createCasting()]),
       synopsis: [''],
       poster: [''],
+      trailer: [''],
+      casting: this.fb.array([]), 
     });
 
     this.movieId = Number(this.route.snapshot.paramMap.get('id'));
+
     this.movieService.movieDetail(this.movieId).subscribe((data) => {
-      this.movie = data['data'];
+      this.movie = {
+        ...data['data'],
+        releaseDate: data['data'].release_date,
+        averageRating: data['data'].average_rating,
+      };
+      const castingData = data['casting'] || [];
+      const trailer = this.movie?.trailer_url || '';
+
+      // Set field biasa
       this.movieForm.patchValue({
         title: this.movie?.title,
         genre: this.movie?.genre,
@@ -46,10 +56,28 @@ export class EditMoviePage implements OnInit {
         averageRating: this.movie?.averageRating,
         director: this.movie?.director,
         synopsis: this.movie?.synopsis,
+        poster: this.movie?.poster,
         trailer: this.movie?.trailer_url,
       });
+
+      // Isi casting
+      const castingArray = this.movieForm.get('casting') as FormArray;
+      castingData.forEach((cast: any) => {
+        castingArray.push(
+          this.fb.group({
+            actor_name: [cast.actor, Validators.required],
+            role: [cast.role, Validators.required],
+            image: [cast.image || ''], 
+          })
+        );
+      });
+
+      if (castingArray.length === 0) {
+        castingArray.push(this.createCasting());
+      }
     });
   }
+
 
   triggerFileInput(type: 'desktop' | 'mobile') {
     const inputElement =
@@ -68,6 +96,7 @@ export class EditMoviePage implements OnInit {
     return this.fb.group({
       actor_name: ['', Validators.required],
       role: ['', Validators.required],
+      image: ['']
     });
   }
 
@@ -120,8 +149,51 @@ export class EditMoviePage implements OnInit {
   }
 
   saveMovie() {
-    this.movieService;
-    alert('Movie updated successfully!');
-    this.router.navigate(['/manage-movie']);
+    if (this.movieForm.invalid || !this.movie) {
+      alert('Form tidak valid atau data film belum dimuat.');
+      return;
+    }
+
+    const formValue = this.movieForm.value;
+
+    const actor: string[] = [];
+    const role: string[] = [];
+    const image: string[] = [];
+
+    this.casting.controls.forEach((group: any) => {
+      actor.push(group.get('actor_name')?.value);
+      role.push(group.get('role')?.value);
+      image.push(group.get('image')?.value || '');
+    });
+
+    const poster = this.posterPreviewDesktop || formValue.poster || this.movie.poster;
+    const trailer = formValue.trailer;
+
+    this.movieService
+      .updatemovie(
+        this.movieId,
+        formValue.title,
+        formValue.genre,
+        poster,
+        formValue.releaseDate,
+        formValue.director,
+        formValue.synopsis,
+        formValue.averageRating,
+        actor,
+        role,
+        image,
+        trailer
+      )
+      .subscribe((res: any) => {
+        console.log('Response dari editmovie.php:', res);
+
+        if (res.result === 'success') {
+          alert('Movie updated successfully!');
+          this.router.navigate(['/manage-movie']);
+        } else {
+          alert('Gagal update movie: ' + res.message);
+        }
+      });
   }
+
 }

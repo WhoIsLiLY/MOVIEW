@@ -23,7 +23,7 @@ export class AddMoviePage implements OnInit {
     private router: Router,
     private toastController: ToastController,
     private movieService: MovieService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.movieForm = this.fb.group({
@@ -148,10 +148,10 @@ export class AddMoviePage implements OnInit {
       formData.append('poster_mobile', this.posterFileMobile);
     }
 
-    castings.forEach((c: any, index: number) => {
-      formData.append(`actor[]`, c.actor_name);
+    castings.forEach((c: any) => { // 'index' tidak perlu jika tidak dipakai
+      formData.append(`actor[]`, c.actor_name); // Gunakan 'c.actor' bukan 'c.actor_name'
       formData.append(`role[]`, c.role);
-      formData.append(`image[]`, c.image); // If image is file, use File, not base64 string
+      formData.append(`image[]`, c.image);
     });
 
     this.movieService.addmovieForm(formData).subscribe((data) => {

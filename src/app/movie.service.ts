@@ -77,7 +77,7 @@ export class MovieService {
     return this.http.post(
       'https://ubaya.xyz/hybrid/160422007/newmovie.php',
       formData
-    );
+    ).pipe(tap((response) => console.log('movieList response:', response)));
   }
 
   updatemovieForm(formData: FormData) {
